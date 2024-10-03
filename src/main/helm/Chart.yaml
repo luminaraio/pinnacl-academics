@@ -1,0 +1,14 @@
+apiVersion: v2
+name: ${chartName}
+description: Pinnacl Academics Service - Helm Chart
+type: application
+version: ${projectVersion}
+appVersion: ${projectVersion}
+maintainers:
+  - name: Luminara Team
+    email: tech@luminara.io
+
+dependencies:
+  - name: pinnacl-commons
+    version: ${commonsVersion}
+    repository: oci://luminara.registry.jetbrains.space/p/pi/pinnacl-hub

@@ -1,0 +1,210 @@
+plugins {
+    id 'java'
+
+    id 'idea'
+
+    id 'maven-publish'
+    id 'jacoco'
+    id 'pmd'
+
+    alias(libs.plugins.pluginShadow)
+
+    alias(libs.plugins.pluginSpotless)
+    alias(libs.plugins.pluginSpotbugs)
+    alias(libs.plugins.pluginVersionsByBen)
+    alias(libs.plugins.pluginBuildTimeTracker)
+
+    alias(libs.plugins.pluginVertx)
+    alias(libs.plugins.pluginLiquibase)
+
+    alias(libs.plugins.pluginGoogleJib)
+    alias(libs.plugins.pluginHelm)
+    alias(libs.plugins.pluginHelmPublish)
+
+//    alias(libs.plugins.pluginGitSemverEnforcer)
+}
+
+def envPostfix = 'local'
+
+if (!hasProperty('buildProfile')) ext.buildProfile = envPostfix
+
+apply from: "$rootDir/gradle/repos-${buildProfile}.gradle"
+//apply from: "$rootDir/gradle/semver-${buildProfile}.gradle"
+apply from: "$rootDir/gradle/publish-${buildProfile}.gradle"
+apply from: "$rootDir/gradle/code-formatting.gradle"
+apply from: "$rootDir/gradle/code-quality.gradle"
+apply from: "$rootDir/gradle/liquibase.gradle"
+
+group = 'io.pinnacl'
+description = 'Pinnacl: Academics Service'
+
+if (ext.buildProfile == envPostfix) {
+    project.afterEvaluate {
+        compileJava.dependsOn spotlessApply
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_23.majorVersion))
+    }
+}
+
+ext {
+    branch = "${project.ext.properties['semver.branch']}"
+    semverVersion = "${project.ext.properties['semver.version']}"
+    buildTimestamp = "${project.ext.properties['semver.buildTimestamp']}"
+    commitHash = "${project.ext.properties['semver.commitHash']}"
+    commitHashAbbrev = "${project.ext.properties['semver.commitHashAbbrev']}"
+    commitDistance = "${project.ext.properties['semver.commitDistance']}"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/generated/source/java"
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['--enable-preview', '-Xlint:unchecked', '-Xlint:deprecation']
+}
+
+tasks.withType(Test) {
+    jvmArgs += ['--enable-preview']
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += ['--enable-preview']
+}
+
+dependencies {
+    // Dependencies: Pinnacl
+    implementation(libs.pinnaclCommons)
+
+    // Dependencies: Vert.x
+    implementation(libs.bundles.vertxDependencies)
+
+    // Dependencies: DB
+    implementation(libs.bundles.databaseDependencies)
+    
+    // Dependencies: Lombok
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
+
+    // Dependencies: MapStruts
+    implementation(libs.mapstruct)
+    annotationProcessor(libs.mapstructProcessor)
+    testAnnotationProcessor(libs.mapstructProcessor)
+
+    // Dependencies: Others
+
+
+    // Dependencies: Tests
+    testImplementation(libs.bundles.testDependencies)
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+}
+
+vertx {
+    vertxVersion = libs.versions.libraryVertx.get()
+    launcher = "io.pinnacl.commons.Launcher"
+    mainVerticle = 'io.pinnacl.academics.MainVerticle'
+    args = ['--cluster',
+            '--add-modules java.se',
+            '--add-exports java.base/jdk.internal.ref=ALL-UNNAMED',
+            '--add-opens java.base/java.lang=ALL-UNNAMED',
+            '--add-opens java.base/java.nio=ALL-UNNAMED',
+            '--add-opens java.base/sun.nio.ch=ALL-UNNAMED',
+            '--add-opens java.management/sun.management=ALL-UNNAMED',
+            '--add-opens jdk.management/com.ibm.lang.management.internal=ALL-UNNAMED',
+            '--add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED']
+    jvmArgs = ['--enable-preview', '-Duser.timezone=UTC']
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:23-jre-alpine"
+        platforms {
+            platform {
+                architecture = 'amd64'
+                os = 'linux'
+            }
+            platform {
+                architecture = 'arm64'
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = "luminara/pinnacl-academics:latest"
+        tags = project.provider {[project.version.toString(), "${commitHashAbbrev}"]}
+    }
+    container {
+        mainClass = 'io.pinnacl.commons.Launcher'
+        args = ['run', 'io.pinnacl.academics.MainVerticle', '-cluster']
+        ports = ["9090", "9091", "5701"]
+        jvmFlags = ['--enable-preview',
+                    '-Dvertx.cacheDirBase=/tmp/vertx-cache',
+                    '-Dvertx.hazelcast.config=/app/configs/hazelcast.xml',
+                    '-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory',
+                    '-Djava.security.egd=file:/dev/./urandom']
+        extraClasspath = ['/', '/app/configs']
+        user = "nobody:nobody"
+        environment = [
+                'BUILD_TIMESTAMP': "${buildTimestamp}".toString(),
+                'COMMIT_HASH'    : "${commitHash}".toString(),
+                'VERSION'        : "${project.version}".toString(),
+        ]
+    }
+}
+
+helm {
+    filtering {
+        values.put 'commonsVersion', libs.versions.libraryPinnaclCommons.get()
+    }
+    lint {
+        // treat linter warnings as errors (failing the build)
+        strict = true
+    }
+}
+
+// Ref: https://blog.mrhaki.com/2016/12/gradle-goodness-passing-environment.html
+setEnvVarRunConfiguration 'BUILD_TIMESTAMP', "${buildTimestamp}".toString()
+setEnvVarRunConfiguration 'COMMIT_HASH', "${commitHash}".toString()
+setEnvVarRunConfiguration 'VERSION', "${project.version}".toString()
+
+def setEnvVarRunConfiguration(
+        final String envName,
+        final String envValue) {
+
+    // Find task by type JavaExec and matching
+    // task name for configuration name.
+    final javaExecRunConfiguration = { task ->
+        task instanceof JavaExec && (task.name == "vertxRun" || task.name == "vertxDebug")
+    }
+
+    tasks.matching(javaExecRunConfiguration).all {
+        // Add environment variable to JavaExec
+        // task configuration.
+        environment envName, envValue
+    }
+}
+
+
+task printVersion {
+    // any code that goes here is part of configuring the task
+    // this code will always get run, even if the task is not executed
+    doLast { // add a task action
+        // any code that goes here is part of executing the task
+        // this code will only get run if and when the task gets executed
+        println "projectVersion=> ${project.version}"
+    }
+}

@@ -1,0 +1,14 @@
+hazelcast:
+  properties:
+    hazelcast.logging.type: slf4j
+  network:
+    join:
+      multicast:
+        enabled: false
+      tcp-ip:
+        enabled: false
+      kubernetes:
+        enabled: true
+        namespace: {{ .Release.Namespace }}
+        kubernetes-api-retries: 6
+        service-name: {{ printf "%s-service" (include "pinnacl-commons.hazelcastCluster" .) }}

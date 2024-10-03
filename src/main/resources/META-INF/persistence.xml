@@ -1,0 +1,40 @@
+<!--suppress ALL -->
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <persistence-unit name="postgresql">
+        <provider>org.hibernate.reactive.provider.ReactivePersistenceProvider</provider>
+        <!--        <exclude-unlisted-classes>true</exclude-unlisted-classes>-->
+
+        <class>io.pinnacl.core.organisation.country.data.persistence.CountryEntity</class>
+        <class>io.pinnacl.core.organisation.language.data.persistence.LanguageEntity</class>
+
+        <class>io.pinnacl.core.organisation.data.persistence.AddressEntity</class>
+        <class>io.pinnacl.core.organisation.data.persistence.BrandEntity</class>
+        <class>io.pinnacl.core.organisation.data.persistence.OrganisationEntity</class>
+        <class>io.pinnacl.core.organisation.category.data.persistence.OrganisationCategoryEntity</class>
+        <class>io.pinnacl.core.userprofile.data.persistence.UserProfileEntity</class>
+        <class>io.pinnacl.core.userprofile.data.persistence.UserProfileAndOrganisationLink</class>
+        <class>io.pinnacl.core.organisation.depositAccount.data.persistence.DepositAccountEntity</class>
+        <class>io.pinnacl.core.organisation.depositAccount.data.persistence.AccountBankEntity</class>
+        <class>io.pinnacl.core.education.school.data.persistence.TermEntity</class>
+        <class>io.pinnacl.core.education.school.data.persistence.TuitionFeeEntity</class>
+        <class>io.pinnacl.core.education.school.data.persistence.SchoolEntity</class>
+        <class>io.pinnacl.core.education.application.data.persistence.ApplicationEntity</class>
+        <class>io.pinnacl.core.organisation.booking.data.persistence.OrganisationBookingEmailEntity</class>
+        <class>io.pinnacl.core.organisation.contactusfeedback.data.persistence.ContactUsFeedbackEmailEntity</class>
+
+        <properties>
+
+            <!-- SQL statement logging -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.highlight_sql" value="true"/>
+
+        </properties>
+
+    </persistence-unit>
+
+</persistence>

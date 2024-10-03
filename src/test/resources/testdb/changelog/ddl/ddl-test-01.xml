@@ -1,0 +1,39 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <property name="uuid_type" value="uuid" dbms="h2"/>
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_type" value="varchar(255)" dbms="mysql"/>
+
+    <property name="uuid_function" value="random_uuid()" dbms="h2"/>
+    <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
+    <property name="uuid_function" value="uuid()" dbms="mysql"/>
+
+    <changeSet id="ddl-test-001" author="luminara">
+        <sql dbms="postgresql">CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
+    </changeSet>
+
+    <changeSet id="ddl-test-002" author="luminara">
+        <createTable tableName="things">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="text"/>
+            <column name="description" type="text"/>
+            <column name="alternate_name" type="text"/>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false"/>
+            <column name="created_on" type="timestamp" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="timestamp" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

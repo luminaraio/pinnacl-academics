@@ -1,0 +1,144 @@
+[versions]
+
+# Plugins
+pluginShadow = "8.1.1"
+pluginSpotless = "6.25.0"
+pluginSpotbugs = "6.0.23"
+pluginVersionsByBen = "0.51.0"
+pluginBuildTimeTracker = "4.3.0"
+
+pluginVertx = "1.4.0"
+pluginLiquibase = "2.2.1"
+
+pluginGoogleJib = "3.4.0"
+pluginHelm = "2.0.0"
+pluginHelmPublish = "2.0.0"
+pluginGitSemverEnforcer = "0.0.3-SNAPSHOT"
+
+
+# Project dependencies
+
+# Dependencies: Pinnacl
+libraryPinnaclCommons = "24.7.0"
+
+
+# Dependencies: Vert.x
+libraryVertx = "4.5.10"
+libraryJakartaPersistence = "3.2.0"
+libraryHibernateReactive = "2.4.1.Final"
+libraryMutinyVertx = "3.15.1"
+
+# Dependencies: Utilities
+libraryLombok = "1.18.34"
+libraryMapstruct = "1.6.2"
+libraryLogback = "1.5.8"
+libraryLogstashLogbackEncoder = "8.0"
+librarySecurityLogging = "1.1.7"
+
+# Dependencies: Others
+
+# Dependencies: Test
+libraryJupiter = "5.11.1"
+libraryMockito = "5.14.1"
+libraryAssertj = "3.26.3"
+libraryTestcontainers = "1.20.2"
+libraryJeasyEasyRandom = "5.0.0"
+
+
+# Dependencies: Code Quality
+libraryPmd = "7.0.0"
+libraryJacoco = "0.8.12"
+librarySpotbugs = "4.8.5"
+libraryFindsecbugs = "1.13.0"
+librarySbContrib = "7.6.5"
+
+
+# Dependencies: Database/Liquibase
+libraryJaxb = "3.0.0"
+libraryLiquibase = "4.29.2"
+libraryPostgres = "42.7.4"
+libraryOngresScram = "2.1"
+
+
+
+[plugins]
+
+pluginShadow = { id = "com.github.johnrengelman.shadow", version.ref = "pluginShadow" }
+pluginSpotless = { id = "com.diffplug.spotless", version.ref = "pluginSpotless" }
+pluginSpotbugs = { id = "com.github.spotbugs", version.ref = "pluginSpotbugs" }
+
+pluginVersionsByBen = { id = "com.github.ben-manes.versions", version.ref = "pluginVersionsByBen" }
+pluginBuildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "pluginBuildTimeTracker" }
+
+pluginVertx = { id = "io.vertx.vertx-plugin", version.ref = "pluginVertx" }
+pluginLiquibase = { id = "org.liquibase.gradle", version.ref = "pluginLiquibase" }
+
+pluginGoogleJib = { id = "com.google.cloud.tools.jib", version.ref = "pluginGoogleJib" }
+pluginHelm = { id = "org.unbroken-dome.helm", version.ref = "pluginHelm"}
+pluginHelmPublish = { id = "org.unbroken-dome.helm-publish", version.ref = "pluginHelmPublish" }
+
+pluginGitSemverEnforcer = { id = "io.luminara.utils.gradle-git-semver-enforcer", version.ref = "pluginGitSemverEnforcer" }
+
+
+[libraries]
+
+# Dependencies: Pinnacl
+pinnaclCommons = { module = "io.pinnacl:pinnacl-commons", version.ref = "libraryPinnaclCommons" }
+
+# Dependencies: Vert.x
+vertxConfigYaml = { module = "io.vertx:vertx-config-yaml", version.ref = "libraryVertx" }
+vertxWebTemplatesHandlebars = { module = "io.vertx:vertx-web-templ-handlebars", version.ref = "libraryVertx" }
+
+vertxPgClient = { module = "io.vertx:vertx-pg-client", version.ref = "libraryVertx" }
+vertxSqlClientTemplates = { module = "io.vertx:vertx-sql-client-templates", version.ref = "libraryVertx" }
+jakartaPersistence = { module = "jakarta.persistence:jakarta.persistence-api", version.ref = "libraryJakartaPersistence" }
+hibernateReactive = { module = "org.hibernate.reactive:hibernate-reactive-core", version.ref = "libraryHibernateReactive" }
+mutinyVertx = { module = "io.smallrye.reactive:smallrye-mutiny-vertx-runtime", version.ref = "libraryMutinyVertx" }
+
+
+# Dependencies: Utilities
+lombok = { module = "org.projectlombok:lombok", version.ref = "libraryLombok" }
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "libraryMapstruct" }
+mapstructProcessor = { module = "org.mapstruct:mapstruct-processor", version.ref = "libraryMapstruct" }
+
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "libraryLogback" }
+owaspSecurityLogging = { module = "org.owasp:security-logging-logback", version.ref = "librarySecurityLogging" }
+logstash = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "libraryLogstashLogbackEncoder" }
+
+# Dependencies: Others
+
+# Dependencies: Database/Liquibase
+jaxb = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version.ref = "libraryJaxb" }
+liquibase = { module = "org.liquibase:liquibase-core", version.ref = "libraryLiquibase" }
+postgres = { module = "org.postgresql:postgresql", version.ref = "libraryPostgres" }
+ongresScram = { module = "com.ongres.scram:client", version.ref = "libraryOngresScram" }
+
+# Dependencies: Test
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "libraryJupiter" }
+junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "libraryJupiter" }
+junitJupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "libraryJupiter" }
+vertxUnit = { module = "io.vertx:vertx-unit", version.ref = "libraryVertx" }
+vertxjUnit5 = { module = "io.vertx:vertx-junit5", version.ref = "libraryVertx" }
+mockitoCore = { module = "org.mockito:mockito-core", version.ref = "libraryMockito" }
+mockitojUnitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "libraryMockito" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "libraryAssertj" }
+testcontainers = { module = "org.testcontainers:junit-jupiter", version.ref = "libraryTestcontainers" }
+testcontainersPostgres = { module = "org.testcontainers:postgresql", version.ref = "libraryTestcontainers" }
+jeasyEasyRandom = { module = "org.jeasy:easy-random-core", version.ref = "libraryJeasyEasyRandom" }
+
+# Dependencies: Code Quality
+findsecbugs = { module = "com.h3xstream.findsecbugs:findsecbugs-plugin", version.ref = "libraryFindsecbugs" }
+sbContrib = { module = "com.mebigfatguy.sb-contrib:sb-contrib", version.ref = "librarySbContrib" }
+
+
+
+
+
+[bundles]
+
+vertxDependencies = ["vertxWebTemplatesHandlebars"]
+databaseDependencies = ["vertxPgClient", "vertxSqlClientTemplates", "hibernateReactive", "mutinyVertx", "liquibase",
+    "postgres", "ongresScram", "jakartaPersistence"]
+testDependencies = ["junitJupiter", "junitEngine", "junitJupiterParams", "vertxUnit", "vertxjUnit5", "vertxConfigYaml",
+    "mockitoCore", "mockitojUnitJupiter", "assertj", "testcontainers", "testcontainersPostgres", "jeasyEasyRandom"]
+liquibaseDependencies = ["liquibase", "postgres", "logback", "jaxb"]

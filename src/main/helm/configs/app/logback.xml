@@ -1,0 +1,23 @@
+<configuration>
+    <conversionRule conversionWord="crlf" converterClass="org.owasp.security.logging.mask.CRLFConverter"/>
+    <conversionRule conversionWord="uuid" converterClass="io.pinnacl.commons.logging.UuidConverter"/>
+
+    <appender name="local" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %blue(%uuid) %yellow(%d{HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %cyan(%logger{36}) -
+                %msg %n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <logger name="io.netty" level="ERROR" />
+    <logger name="io.vertx" level="WARN"/>
+    <logger name="com.hazelcast" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="com.jayway" level="ERROR"/>
+
+    <root level={{ include "pinnacl-commons.loggingLevel" . | quote }}>
+        <appender-ref ref="local" />
+    </root>
+</configuration>

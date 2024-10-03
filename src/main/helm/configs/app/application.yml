@@ -1,0 +1,87 @@
+{{- $keycloak := default "pinnacl-keycloak" .Values.keycloak.name }}
+{{- $keycloakConfigmap := (lookup "v1" "ConfigMap" .Release.Namespace (printf "%s-configmap" $keycloak)) }}
+{{- $keycloakRealmConfigmap := (lookup "v1" "ConfigMap" .Release.Namespace (printf "%s-realm-configmap" $keycloak)) }}
+{{- $keycloakRealmSecret := (lookup "v1" "Secret" .Release.Namespace (printf "%s-realm-secret" $keycloak)) }}
+{{- $dbName := .Values.database.name -}}
+{{- $dbTLSEnabled := default false .Values.database.tls.enabled }}
+{{- $certsMountPath := default "/app/configs/db/certs" .Values.database.tls.certPath }}
+service:
+  name: academics
+  displayName: Pinnacl Project - Academics Service
+  address: io.pinnacl.academics
+  sharedData:
+    enabled: true
+    extraMaps:
+      - gateway
+      - refreshTokens
+      - totps
+      - languages
+
+{{ $observability := include "pinnacl-commons.containerPorts" (merge (dict "name" "observability") .) }}
+observability:
+  enabled: true
+  {{- if and $observability (or .Values.metrics.enabled (or .Values.livenessProbe.enabled .Values.readinessProbe.enabled)) }}
+  port: {{ $observability }}
+  {{- end }}
+  metrics:
+    enabled: true
+    {{- if and $observability .Values.metrics.enabled }}
+    path: {{ .Values.metrics.path }}
+    {{- end }}
+  k8s:
+    enabled: true
+    {{- if and $observability (or .Values.livenessProbe.enabled .Values.readinessProbe.enabled) }}
+    probes:
+      {{- if .Values.livenessProbe.enabled }}
+      liveness: {{ .Values.livenessProbe.path }}
+      {{- end }}
+      {{- if .Values.readinessProbe.enabled }}
+      readiness: {{ .Values.readinessProbe.path }}
+      {{- end }}
+    {{- end }}
+
+
+storage:
+  db:
+    host: placeholder-db-host
+    port: placeholder-db-port
+    name: placeholder-db-name
+    user: placeholder-db-user
+    password: placeholder-db-password
+    url: placeholder-db-url
+    useTls: {{ $dbTLSEnabled }}
+    certPath: {{ printf "%s/tls.crt" $certsMountPath }}
+    maxPool: {{ include "pinnacl-commons.dbMaxConnectionPool" . }}
+    migration:
+      enabled: true
+      changelogPath: {{ printf "/app/resources/migrations/changelog/db.changelog-%s.xml" (include "pinnacl-commons.dbMigrationEnv" .) }}
+
+
+features:
+  verticles:
+    service:
+      address: service.details
+      messageTypes:
+        - name: coreVersion
+          broadcastable: false
+        - name: coreHealthLive
+          broadcastable: false
+        - name: coreHealthReady
+          broadcastable: false
+
+    school:
+      address: schools
+      identifier: id
+      messageTypes:
+        - name: createSchool
+        - name: updateSchool
+        - name: retrieveSchool
+        - name: retrieveSchools
+        - name: archiveSchool
+
+    language:
+      address: languages
+      identifier: id
+      messageTypes:
+        - name: retrieveLanguages
+        - name: retrieveLanguage

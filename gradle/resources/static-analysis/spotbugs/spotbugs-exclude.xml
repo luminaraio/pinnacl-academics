@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+
+    <!-- Potential CRLF Injection for logs. -->
+    <!-- We are using the project OWASP Security Logging has an implementation for Logback and Log4j to resolve this-->
+    <Match>
+        <Bug code="SECCRLFLOG"/>
+    </Match>
+</FindBugsFilter>

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-tz-configmap" (include "pinnacl-commons.fullname" .) }}
+data:
+  name: TZ
+  value: UTC

@@ -1,0 +1,86 @@
+ext {
+    ignoreFailures = true
+    minimumCoverageRatio = 0.75
+}
+
+check.dependsOn jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
+
+dependencies {
+    spotbugsPlugins(libs.findsecbugs)
+    spotbugsPlugins(libs.sbContrib)
+}
+
+jacoco {
+    toolVersion = libs.versions.libraryJacoco.get()
+}
+
+jacocoTestReport {
+    reports {
+        html {
+            enabled true
+        }
+        xml {
+            enabled false
+        }
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        failOnViolation = false
+        rule {
+            limit {
+                minimum = project.minimumCoverageRatio
+            }
+        }
+    }
+}
+
+pmd {
+    toolVersion = libs.versions.libraryPmd.get()
+    ignoreFailures = project.ignoreFailures
+    consoleOutput = true
+    rulesMinimumPriority = 2
+    ruleSets = []
+    sourceSets = [sourceSets.main]
+    ruleSetFiles = files('gradle/resources/static-analysis/pmd/pmd.xml')
+}
+
+spotbugs {
+    toolVersion = libs.versions.librarySpotbugs.get()
+    ignoreFailures = project.ignoreFailures
+    showProgress = true
+//    effort = 'max'
+//    reportLevel = 'low'
+    reportsDir = file("$buildDir/spotbugs")
+    includeFilter = file('gradle/resources/static-analysis/spotbugs/spotbugs-include.xml')
+    excludeFilter = file('gradle/resources/static-analysis/spotbugs/spotbugs-exclude.xml')
+}
+
+spotbugsMain {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/spotbugs/main.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
+spotbugsTest {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/spotbugs/test.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}

@@ -1,0 +1,53 @@
+def disableSpotlessCheck = project.hasProperty('disableSpotlessCheck') &&
+        project.disableSpotlessCheck == 'true'
+
+spotless {
+    enforceCheck !disableSpotlessCheck
+
+    java {
+        // licenseHeaderFile 'spotless.license.java'
+//        removeUnusedImports() // removes any unused imports
+
+        eclipse().configFile('gradle/code-formatting-luminara-styleguide.xml')
+//        googleJavaFormat()
+        // you can then layer other format steps, such as
+
+        target project.fileTree(project.rootDir) {
+            include '**/*.java'
+            exclude '**/package-info.java'
+            exclude '**/build/generated/**'
+            exclude '**/build/generated-sources/**'
+            exclude '.gradle/**/*.java'
+            exclude 'src/main/generated/**'
+            exclude 'src/test/generated/**'
+        }
+
+        trimTrailingWhitespace()
+        endWithNewline()
+
+        custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+    }
+}
+
+def envPostfix = 'local'
+
+if (!hasProperty('buildProfile')) ext.buildProfile = envPostfix
+
+if (ext.buildProfile == envPostfix) {
+    tasks.named('spotlessJava').configure {
+        it.dependsOn('helmCollectMainChartSources')
+        it.dependsOn('processResources')
+        it.dependsOn('processTestResources')
+    }
+    project.afterEvaluate {
+        compileJava.dependsOn spotlessApply
+    }
+} else {
+    tasks.named('spotlessJava').configure {
+        it.dependsOn('compileJava')
+        it.dependsOn('processResources')
+        it.dependsOn('compileTestJava')
+        it.dependsOn('processTestResources')
+        it.dependsOn('test')
+    }
+}

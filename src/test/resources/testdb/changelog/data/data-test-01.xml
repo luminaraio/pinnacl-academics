@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="data-test-001" author="luminara">
+        <insert tableName="things">
+            <column name="name">Swift</column>
+            <column name="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</column>
+            <column name="alternate_name">Tfiws</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">Nexus</column>
+            <column name="description">Cras imperdiet erat vitae pretium aliquam. Nam imperdiet iaculis lobortis.
+            </column>
+            <column name="alternate_name">Suxes</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">First</column>
+            <column name="description">Donec eget tortor quis augue cursus pellentesque tempus a mi.</column>
+            <column name="alternate_name">Tsrif</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">Avanti</column>
+            <column name="description">Cras imperdiet erat vitae pretium aliquam. Nam imperdiet iaculis lobortis.
+            </column>
+            <column name="alternate_name">Itnava</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">South Eastern Rail</column>
+            <column name="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</column>
+            <column name="alternate_name"></column>
+        </insert>
+
+
+        <insert tableName="things">
+            <column name="name">Swift - 2</column>
+            <column name="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</column>
+            <column name="alternate_name">Tfiws</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">Nexus - 2</column>
+            <column name="description">Cras imperdiet erat vitae pretium aliquam. Nam imperdiet iaculis lobortis.
+            </column>
+            <column name="alternate_name">Suxes</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">First - 2</column>
+            <column name="description">Donec eget tortor quis augue cursus pellentesque tempus a mi.</column>
+            <column name="alternate_name">Tsrif</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">Avanti - 2</column>
+            <column name="description">Cras imperdiet erat vitae pretium aliquam. Nam imperdiet iaculis lobortis.
+            </column>
+            <column name="alternate_name">Itnava</column>
+        </insert>
+
+        <insert tableName="things">
+            <column name="name">South Eastern Rail - 2</column>
+            <column name="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</column>
+            <column name="alternate_name"></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

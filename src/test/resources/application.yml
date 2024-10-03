@@ -1,0 +1,59 @@
+service:
+  name: core
+  displayName: Pinnacl Project - Core Service
+  address: io.pinnacl.core
+  sharedData:
+    enabled: true
+    extraMaps:
+      - gateway
+      - refreshTokens
+      - totps
+      - languages
+
+observability:
+  enabled: true
+  port: 9092
+  metrics:
+    enabled: true
+    path: /metrics
+  k8s:
+    enabled: true
+    probes:
+      liveness: /health/live
+      readiness: /health/ready
+
+
+storage:
+  db:
+    host: localhost
+    port: 6542
+    name: core
+    user: luffy
+    password: gear-fourth-boundman
+    url: jdbc:postgresql://localhost:6542/core
+    useTls: false
+    certPath: /tmp/dummy-cert.pem
+    maxPool: 5
+    migration:
+      enabled: true
+      changelogPath: migrations/changelog/db.changelog-dev.xml
+
+
+features:
+  verticles:
+    service:
+      address: service.details
+      messageTypes:
+        - name: coreVersion
+          broadcastable: false
+        - name: coreHealthLive
+          broadcastable: false
+        - name: coreHealthReady
+          broadcastable: false
+
+    language:
+      address: languages
+      identifier: id
+      messageTypes:
+        - name: retrieveLanguages
+        - name: retrieveLanguage

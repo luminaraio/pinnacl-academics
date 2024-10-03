@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="pinnacl-team" id="data-0001-01">
+        <insert tableName="organisations">
+            <column name="id" value="de3c5ce4-d6e2-4311-afe2-ccc53156743d"/>
+            <column name="owner_id"/>
+            <column name="name" value="Pinnacl"/>
+            <column name="description"/>
+            <column name="alternate_name"/>
+            <column name="legal_name"/>
+            <column name="email" value="pinnacl-admins@luminara.io"/>
+            <column name="telephone" value="00000000000"/>
+            <column name="social_links"/>
+            <column name="contact_point"/>
+            <column name="logo_asset_id"/>
+            <column name="deleted" valueBoolean="false"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_by"/>
+            <column name="created_on" valueComputed="NOW()"/>
+            <column name="updated_by"/>
+            <column name="updated_on" valueComputed="NOW()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="pinnacl-team" id="data-0001-02">
+        <insert tableName="user_profiles">
+            <column name="id" value="66f82a06-ec6f-41c1-8a73-d4cec7631687"/>
+            <column name="username" value="odin"/>
+            <column name="name" value="Odin"/>
+            <column name="description"/>
+            <column name="alternate_name"/>
+            <column name="email"/>
+            <column name="telephone"/>
+            <column name="birth_date"/>
+            <column name="gender" value="NOT_SPECIFIED"/>
+            <column name="title"/>
+            <column name="owner_id" value="de3c5ce4-d6e2-4311-afe2-ccc53156743d"/>
+            <column name="deleted" valueBoolean="false"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_by"/>
+            <column name="created_on" valueComputed="NOW()"/>
+            <column name="updated_by"/>
+            <column name="updated_on" valueComputed="NOW()"/>
+        </insert>
+        <insert tableName="user_profiles">
+            <column name="id" value="6735b5a9-d4a2-4cd8-b1eb-eff510e9a011"/>
+            <column name="username" value="heimdall"/>
+            <column name="name" value="Heimdall"/>
+            <column name="description"/>
+            <column name="alternate_name"/>
+            <column name="email"/>
+            <column name="telephone"/>
+            <column name="birth_date"/>
+            <column name="gender" value="NOT_SPECIFIED"/>
+            <column name="title"/>
+            <column name="owner_id" value="de3c5ce4-d6e2-4311-afe2-ccc53156743d"/>
+            <column name="deleted" valueBoolean="false"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_by"/>
+            <column name="created_on" valueComputed="NOW()"/>
+            <column name="updated_by"/>
+            <column name="updated_on" valueComputed="NOW()"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="pinnacl-team" id="data-0001-03">
+        <insert tableName="_link_organisation_employees">
+            <column name="organisation_id" value="de3c5ce4-d6e2-4311-afe2-ccc53156743d"/>
+            <column name="user_profile_id" value="66f82a06-ec6f-41c1-8a73-d4cec7631687"/>
+        </insert>
+
+        <insert tableName="_link_organisation_employees">
+            <column name="organisation_id" value="de3c5ce4-d6e2-4311-afe2-ccc53156743d"/>
+            <column name="user_profile_id" value="6735b5a9-d4a2-4cd8-b1eb-eff510e9a011"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

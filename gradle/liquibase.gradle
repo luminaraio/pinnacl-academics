@@ -1,0 +1,31 @@
+ext {
+    mainUrl = project.hasProperty('mainUrl') ? project.getProperty('mainUrl') : 'jdbc:postgresql://localhost:6542/core'
+    mainUsername = project.hasProperty('mainUsername') ? project.getProperty('mainUsername') : 'luffy'
+    mainPassword = project.hasProperty('mainPassword') ? project.getProperty('mainPassword') : 'gear-fourth-boundman'
+    environment = project.hasProperty('environment') ? project.getProperty('environment') : 'dev'
+    changeLogFile = project.hasProperty('changeLogFile') ? project.getProperty('changeLogFile') :
+            "migrations/changelog/db.changelog-${environment}.xml"
+    author = project.hasProperty('author') ? project.getProperty('author') : 'pinnacl-team'
+    difftypes = project.hasProperty('difftypes') ? project.getProperty('difftypes') : null
+    runList = project.hasProperty('runList') ? project.getProperty('runList') : 'main'
+}
+
+dependencies {
+    liquibaseRuntime(libs.bundles.liquibaseDependencies)
+    testImplementation(libs.bundles.liquibaseDependencies)
+}
+
+liquibase {
+    activities {
+        main {
+            changeLogFile project.ext.changeLogFile
+            classpath "src/main/resources/"
+            url project.ext.mainUrl
+            username project.ext.mainUsername
+            password project.ext.mainPassword
+            changeSetAuthor project.ext.author
+            difftypes project.ext.difftypes
+        }
+    }
+    runList =  project.ext.runList
+}

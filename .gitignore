@@ -1,0 +1,45 @@
+# Mac
+.DS_Store
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+
+# Maven
+target/
+
+# IDEA
+.idea/
+.run/
+out/
+generated/
+*.iml
+*.ipr
+*.iws
+coverage-error.log
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# Project
+*.mv.db
+*.trace.db
+logs/
+
+# Local Docker Volumes
+gradle/resources/docker/data
+
+# Vert.X
+.vertx/
+*.id
+generated/
+
+archive/
+
+test-data/

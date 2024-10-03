@@ -1,0 +1,15 @@
+repositories {
+    mavenLocal()
+    maven {
+        url "https://maven.pkg.jetbrains.space/luminara/p/pi/pinnacl-central"
+        credentials {
+            username = "$pinnaclSpaceUsername"
+            password = "$pinnaclSpacePassword"
+        }
+    }
+    mavenCentral()
+    maven {
+        url "https://repo.clojars.org"
+        name "clojars.org"
+    }
+}

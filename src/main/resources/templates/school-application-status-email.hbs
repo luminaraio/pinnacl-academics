@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            line-height: 1.5;
+        }
+        .message {
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .message.accepted {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .message.rejected {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .alert {
+            background-color: #ffffff;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: smaller;
+        }
+    </style>
+</head>
+<body>
+<!--<h1>Application Status</h1>-->
+
+<div class="alert">
+    <p>You are receiving this because this email address was used as a guardian's email address by the student named <b><em>{{name}}</em></b>. <br> Please forward this message to your child.</p>
+</div>
+
+{{#if isAccepted}}
+    <div class="">
+        <p>Congratulations, {{name}}! Your application to {{institutionName}} for the {{className}} program has been accepted.</p>
+        <p>We are excited to welcome you to our institution and look forward to your contributions. Please confirm your enrollment by {{acceptanceDeadline}} by clicking the button below.</p>
+        <a href="{{enrollmentLink}}" class="button">Confirm Enrollment</a>
+    </div><br><br>
+{{else}}
+    <div class="">
+        <p>We regret to inform you, {{name}}, that your application to {{institutionName}} for the {{className}} program has been rejected.</p>
+        <p>We appreciate your interest in our institution and encourage you to explore other academic opportunities that may be a better fit. Please let us know if you have any questions or concerns.</p>
+    </div><br><br>
+{{/if}}
+
+<p>Best regards,</p>
+<p>{{institutionName}} Admissions Team</p>
+</body>
+</html>

@@ -1,0 +1,5 @@
+boolean snapshotBuildProp = hasProperty('snapshotBuild') && snapshotBuild == 'true'
+semver {
+    snapshotBuild = snapshotBuildProp
+    properties(['build-environment': 'space-dev'])
+}

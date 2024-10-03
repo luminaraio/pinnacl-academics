@@ -1,0 +1,135 @@
+{{- $name := include "pinnacl-commons.fullname" . -}}
+{{- $dbName := .Values.database.name -}}
+{{- $dbCertVolumeName := printf "%s-cluster-cert" $dbName }}
+{{- $dbTLSEnabled := default false .Values.database.tls.enabled }}
+{{- $certsVolumeName := "db-cert-data" }}
+{{- $certsMountPath := default "/app/configs/db/certs" .Values.database.tls.certPath }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "pinnacl-commons.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+    {{- include "pinnacl-commons.selectorLabels" . | nindent 6 }}
+  replicas: {{ .Values.replicaCount}}
+  {{- if .Values.updateStrategy }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if eq "RollingUpdate" .Values.updateStrategy.type }}
+    rollingUpdate:
+      maxSurge: {{ default "25%" .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ default "25%" .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
+  {{- end }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/configDB: {{ include (print $.Template.BasePath "/configmap-db.yaml") . | sha256sum }}
+        checksum/configJVM: {{ include (print $.Template.BasePath "/configmap-jvm.yaml") . | sha256sum }}
+        checksum/configTZ: {{ include (print $.Template.BasePath "/configmap-tz.yaml") . | sha256sum }}
+        checksum/secretDB: {{ include (print $.Template.BasePath "/secret-db.yaml") . | sha256sum }}
+      labels:
+        {{- include "pinnacl-commons.pinnaclLabels" . | nindent 8 }}
+    spec:
+    {{- include "pinnacl-commons.imagePullSecrets" . }}
+      containers:
+        - name: {{ printf "%s-pod" $name }}
+          image: {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository .Values.image.tag}}
+          imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+          {{- $hazelcast := include "pinnacl-commons.containerPorts" (merge (dict "name" "hazelcast") .)}}
+          {{- $observability := include "pinnacl-commons.containerPorts" (merge (dict "name" "observability") .)}}
+          {{- if or $hazelcast $observability }}
+          ports:
+            {{- if $hazelcast }}
+            - containerPort: {{ $hazelcast }}
+            {{- end }}
+            {{- if and $observability (or .Values.livenessProbe.enabled .Values.readinessProbe.enabled) }}
+            - containerPort: {{ $observability }}
+            {{- end }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ printf "%s-jvm-configmap" (include "pinnacl-commons.fullname" .) }}
+            - configMapRef:
+                name: {{ printf "%s-db-configmap" (include "pinnacl-commons.fullname" .) }}
+            - configMapRef:
+                name: {{ printf "%s-tz-configmap" (include "pinnacl-commons.fullname" .) }}
+            - secretRef:
+                name: {{ printf "%s-db-secret" $name }}
+          {{- $requestQuotas :=  default "true" .Values.resourceQuotas.requests.enabled }}
+          {{- $limitQuotas := default "true" .Values.resourceQuotas.limits.enabled  }}
+          {{- if or $requestQuotas $limitQuotas }}
+          resources:
+            {{- if or $requestQuotas }}
+            requests:
+              cpu: {{ default "500m" .Values.resourceQuotas.requests.cpu | quote }}
+              memory: {{ default "600Mi" .Values.resourceQuotas.requests.memory | quote }}
+            {{- end }}
+            {{- if or $limitQuotas }}
+            limits:
+              memory: {{ default "800Mi" .Values.resourceQuotas.limits.memory | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ default $observability .Values.livenessProbe.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ default 10 .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ default 1 .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ default 1 .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ default 3 .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ default $observability .Values.readinessProbe.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ default 10 .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ default 1 .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ default 1 .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ default 3 .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.startupProbe.path }}
+              port: {{ default $observability .Values.startupProbe.port }}
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ default 10 .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ default 1 .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ default 1 .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ default 3 .Values.startupProbe.failureThreshold }}
+          {{- end }}
+          volumeMounts:
+            {{- $configVolume := (printf "%s-config-data" $name) -}}
+            {{- range .Values.configMaps }}
+            - name: {{ $configVolume }}
+              mountPath: {{ printf "/app/configs/%s" .}}
+              subPath: {{ . }}
+            {{- end }}
+            {{- if $dbTLSEnabled }}
+            - name: {{ $certsVolumeName }}
+              mountPath: {{ $certsMountPath }}
+              readOnly: true
+            {{- end }}
+      volumes:
+        - name: {{ printf "%s-config-data" $name }}
+          configMap:
+            name: {{ printf "%s-configmap" $name }}
+            items:
+            {{- range .Values.configMaps }}
+              - key: {{ . }}
+                path: {{ . }}
+            {{- end }}
+      {{- if $dbTLSEnabled }}
+        - name: {{ $certsVolumeName }}
+          secret:
+            secretName: {{ $dbCertVolumeName }}
+      {{- end }}

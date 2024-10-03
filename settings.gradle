@@ -1,0 +1,32 @@
+if (!hasProperty('buildProfile')) {
+    pluginManagement {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            maven {
+                url "https://maven.pkg.jetbrains.space/luminara/p/pi/pinnacl-central"
+                credentials {
+                    username = "$pinnaclSpaceUsername"
+                    password = "$pinnaclSpacePassword"
+                }
+            }
+            gradlePluginPortal()
+        }
+    }
+} else {
+    pluginManagement {
+        repositories {
+            mavenCentral()
+            maven {
+                url "https://maven.pkg.jetbrains.space/luminara/p/pi/pinnacl-central"
+                credentials {
+                    username = "$System.env.JB_SPACE_CLIENT_ID"
+                    password = "$System.env.JB_SPACE_CLIENT_SECRET"
+                }
+            }
+            gradlePluginPortal()
+        }
+    }
+}
+
+rootProject.name = 'pinnacl-academics'

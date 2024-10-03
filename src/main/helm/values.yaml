@@ -1,0 +1,163 @@
+﻿# Default values for pinnacl-core.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+#nameOverride: ""
+#fullnameOverride: ""
+
+
+replicaCount: 1
+
+
+imagePullSecret:
+  enabled: true
+  pullSecret: "pinnacl-hub-registry-pull-secret"
+
+
+image:
+  registry: luminara.registry.jetbrains.space/p/pi/pinnacl-hub
+  repository: luminara/pinnacl-core
+  tag: ${projectVersion}
+  pullPolicy: Always
+
+
+containerPorts:
+  - name: hazelcast
+    port: 5701
+  - name: observability
+    port: 9091
+
+
+resourceQuotas:
+  requests:
+    enabled: true
+    cpu: 350m
+    memory: 600Mi
+  limits:
+    enabled: true
+    cpu: 800m # Best practice is not to se a CPU limit
+    memory: 800Mi
+
+
+metrics:
+  enabled: true
+  path: /metrics
+  port: 9091
+
+
+livenessProbe:
+  enabled: true
+  path: /health/live
+  port: 9091
+  initialDelaySeconds: 10
+  periodSeconds: 20
+  timeoutSeconds: 10
+  failureThreshold: 5
+
+
+readinessProbe:
+  enabled: true
+  path: /health/ready
+  port: 9091
+  initialDelaySeconds: 5
+  periodSeconds: 20
+  timeoutSeconds: 10
+  failureThreshold: 5
+
+
+startupProbe:
+  enabled: true
+  path: /health/ready
+  port: 9091
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 15
+  failureThreshold: 8
+
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+
+
+configMaps:
+  - application.yml
+  - logback.xml
+  - hazelcast.xml
+
+
+service:
+  type: ClusterIP
+
+
+logging:
+  level: TRACE
+
+
+hazelcast:
+  enabled: true
+  cluster: pinnacl-hazelcast
+
+
+keycloak:
+  name: pinnacl-keycloak
+
+
+database:
+  name: pinnacl-postgres
+  port: 5432
+  tls:
+    enabled: true
+    certPath: /app/configs/db/certs
+
+  image:
+    repository: postgres
+    tag: 13.6-alpine
+
+  instance:
+    name: core
+    user: core-db-user
+    maxPool: 5
+    migrationEnv: dev
+
+
+features:
+  auth:
+    config:
+      otp:
+        length: 8
+        duration: 600
+      certify:
+        minLength: 10
+        maxLength: 120
+      notifications:
+        channels:
+          sms:
+            enabled: true
+          email:
+            enabled: true
+        templates:
+          signature:  The Plazzaa Team
+          registrationAccountWelcome:
+            email:
+              title: Welcome to Plazzaa!
+            sms:
+              title: Welcome to Plazzaa!
+          verifyAccount:
+            email:
+              title: Your One-Time Password (OTP) for Plazzaa
+            sms:
+              title: Your One-Time Password (OTP) for Plazzaa
+          forgotPassword:
+            email:
+              title: Forgot Password - Email
+            sms:
+              title: Forgot Password - SMS
+          newEmployee:
+            email:
+              title: New Employee Account - Email
+            sms:
+              title: New Employee Account - SMS

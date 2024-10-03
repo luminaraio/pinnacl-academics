@@ -1,0 +1,17 @@
+{{- $dbSecrets := (lookup "v1" "Secret" .Release.Namespace (printf "%s-pguser-%s" .Values.database.name .Values.database.instance.user)) }}
+{{- if $dbSecrets }}
+{{- $host := index $dbSecrets.data "host" | b64dec }}
+{{- $port := index $dbSecrets.data "port" | b64dec }}
+{{- $dbInstanceName := index $dbSecrets.data "dbname" | b64dec }}
+{{- $dbInstanceUser := index $dbSecrets.data "user" | b64dec }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-db-configmap" (include "pinnacl-commons.fullname" .) }}
+data:
+  DB_HOST: {{ $host }}
+  DB_PORT: {{ $port | quote }}
+  DB_NAME: {{ $dbInstanceName }}
+  DB_USER: {{ $dbInstanceUser }}
+  DB_URL: {{ printf "jdbc:postgresql://%s:%d/%s" $host ($port | int) $dbInstanceName }}
+{{- end }}
