@@ -1,4 +1,4 @@
-package io.pinnacl.core.education.school.data;
+package io.pinnacl.academics.school.data;
 
 public enum SchoolType {
     PRIMARY,

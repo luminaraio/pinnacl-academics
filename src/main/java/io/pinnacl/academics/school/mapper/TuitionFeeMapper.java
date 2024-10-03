@@ -1,8 +1,8 @@
-package io.pinnacl.core.education.school.mapper;
+package io.pinnacl.academics.school.mapper;
 
 import io.pinnacl.commons.data.mapper.JsonMapper;
-import io.pinnacl.core.education.school.data.domain.TuitionFee;
-import io.pinnacl.core.education.school.data.persistence.TuitionFeeEntity;
+import io.pinnacl.academics.school.data.domain.TuitionFee;
+import io.pinnacl.academics.school.data.persistence.TuitionFeeEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

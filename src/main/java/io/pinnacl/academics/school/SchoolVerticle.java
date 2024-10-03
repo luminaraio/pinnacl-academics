@@ -1,10 +1,10 @@
-package io.pinnacl.core.education.school;
+package io.pinnacl.academics.school;
 
 import io.pinnacl.commons.config.VerticleConfig;
 import io.pinnacl.commons.service.ValidatedService;
 import io.pinnacl.commons.verticle.ValidatedResourceVerticle;
-import io.pinnacl.core.education.school.data.domain.School;
-import io.pinnacl.core.education.school.data.persistence.SchoolEntity;
+import io.pinnacl.academics.school.data.domain.School;
+import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import io.vavr.control.Try;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;

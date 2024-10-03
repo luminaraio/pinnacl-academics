@@ -1,4 +1,4 @@
-package io.pinnacl.core.education.school.data.persistence;
+package io.pinnacl.academics.school.data.persistence;
 
 import io.pinnacl.commons.data.persistence.BaseEntity;
 import lombok.*;

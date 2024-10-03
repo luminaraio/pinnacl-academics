@@ -12,6 +12,6 @@
 
     <!-- Data -->
     <!-- Global Dataset -->
-    <include file="migrations/changelog/data/data-0001-academics.xml"/>
+<!--    <include file="migrations/changelog/data/data-0001-academics.xml"/>-->
 
 </databaseChangeLog>

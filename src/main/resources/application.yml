@@ -1,6 +1,6 @@
 service:
-  name: core
-  displayName: Pinnacl Project - Core Service
+  name: academics
+  displayName: Pinnacl Project - Academics Service
   address: io.pinnacl.academics
   sharedData:
     enabled: true
@@ -26,11 +26,11 @@ observability:
 storage:
   db:
     host: localhost
-    port: 6542
-    name: core
-    user: luffy
-    password: gear-fourth-boundman
-    url: jdbc:postgresql://localhost:6542/core
+    port: 6550
+    name: academics
+    user: pain
+    password: almighty-push
+    url: jdbc:postgresql://localhost:6550/academics
     useTls: false
     certPath: /tmp/dummy-cert.pem
     maxPool: 5
@@ -44,11 +44,11 @@ features:
     service:
       address: service.details
       messageTypes:
-        - name: coreVersion
+        - name: academicsVersion
           broadcastable: false
-        - name: coreHealthLive
+        - name: academicsHealthLive
           broadcastable: false
-        - name: coreHealthReady
+        - name: academicsHealthReady
           broadcastable: false
 
     school:
@@ -60,6 +60,38 @@ features:
         - name: retrieveSchool
         - name: retrieveSchools
         - name: archiveSchool
+
+    schoolApplication:
+      address: applications
+      identifier: id
+      messageTypes:
+        - name: createApplication
+        - name: updateApplication
+        - name: retrieveApplication
+        - name: retrieveApplications
+        - name: archiveApplication
+        - name: retrieveApplicationsAnalytics
+      config:
+        templates:
+          applicationConfirmation:
+            template:
+              path: $workingDir/src/main/resources/templates/school-application-confirmation-(messageType).hbs
+              params:
+                title: School Application - Confirmation
+                signature: The Pinnacl Team
+                supportEmail: (supportEmail)
+                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
+          applicationStatus:
+            template:
+              path: $workingDir/src/main/resources/templates/school-application-status-(messageType).hbs
+              params:
+                title: School Application (status)
+                signature: The Pinnacl Team
+                supportEmail: (supportEmail)
+                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
+        notifications:
+          onCreateOrUpdate:
+            sendEmail: true
 
     language:
       address: languages

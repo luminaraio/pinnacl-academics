@@ -1,7 +1,7 @@
-package io.pinnacl.core.education.school.mapper;
+package io.pinnacl.academics.school.mapper;
 
-import io.pinnacl.core.education.school.data.persistence.TermEntity;
-import io.pinnacl.core.education.school.data.domain.Term;
+import io.pinnacl.academics.school.data.persistence.TermEntity;
+import io.pinnacl.academics.school.data.domain.Term;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,5 +1,5 @@
 create database academics;
 
-\c core;
+\c academics;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 

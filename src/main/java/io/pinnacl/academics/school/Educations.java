@@ -1,9 +1,12 @@
-package io.pinnacl.academics;
+package io.pinnacl.academics.school;
 
+import io.pinnacl.academics.application.ApplicationVerticle;
+import io.pinnacl.academics.school.SchoolVerticle;
+import io.pinnacl.academics.school.data.domain.School;
 import io.pinnacl.commons.Logs;
-import io.pinnacl.core.education.application.ApplicationVerticle;
-import io.pinnacl.core.education.school.SchoolVerticle;
-import io.pinnacl.core.education.school.data.domain.School;
+import io.pinnacl.academics.application.ApplicationVerticle;
+import io.pinnacl.academics.school.SchoolVerticle;
+import io.pinnacl.academics.school.data.domain.School;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;

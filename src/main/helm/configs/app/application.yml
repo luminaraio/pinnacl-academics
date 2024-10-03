@@ -62,11 +62,11 @@ features:
     service:
       address: service.details
       messageTypes:
-        - name: coreVersion
+        - name: academicsVersion
           broadcastable: false
-        - name: coreHealthLive
+        - name: academicsHealthLive
           broadcastable: false
-        - name: coreHealthReady
+        - name: academicsHealthReady
           broadcastable: false
 
     school:
@@ -78,6 +78,40 @@ features:
         - name: retrieveSchool
         - name: retrieveSchools
         - name: archiveSchool
+
+    schoolApplication:
+      address: applications
+      identifier: id
+      messageTypes:
+        - name: createApplication
+        - name: updateApplication
+        - name: retrieveApplication
+        - name: retrieveApplications
+        - name: archiveApplication
+        - name: retrieveApplicationsAnalytics
+      config:
+        templates:
+          applicationConfirmation:
+            template:
+              {{ - $templateDir := "/app/resources" }}
+              path: {{ printf "%s/templates/school-application-confirmation-(messageType).hbs" $templateDir }}
+              params:
+                title: School Application - Confirmation
+                signature: The Pinnacl Team
+                supportEmail: (supportEmail)
+                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
+          applicationStatus:
+            template:
+              {{ - $templateDir := "/app/resources" }}
+              path: {{ printf "%s/templates/school-application-status-(messageType).hbs" $templateDir }}
+              params:
+                title: School Application (status)
+                signature: The Pinnacl Team
+                supportEmail: (supportEmail)
+                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
+        notifications:
+          onCreateOrUpdate:
+            sendEmail: true
 
     language:
       address: languages

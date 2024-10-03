@@ -1,7 +1,7 @@
-package io.pinnacl.core.education.school.data.domain;
+package io.pinnacl.academics.school.data.domain;
 
 import io.pinnacl.commons.data.domain.Domain;
-import io.pinnacl.core.education.school.data.PriceSpecification;
+import io.pinnacl.academics.school.data.PriceSpecification;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

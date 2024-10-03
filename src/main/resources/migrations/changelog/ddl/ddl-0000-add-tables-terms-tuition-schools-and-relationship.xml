@@ -14,7 +14,7 @@
     <property name="uuid_function" value="uuid()" dbms="mysql"/>
 
     <!-- Create Tables -->
-    <changeSet author="pinnacl" id="ddl-0017-01">
+    <changeSet author="pinnacl" id="ddl-0000-01">
         <!-- Create Terms table -->
         <createTable tableName="terms">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -94,7 +94,7 @@
     </changeSet>
 
     <!-- Create Link Tables -->
-    <changeSet author="pinnacl" id="ddl-0017-02">
+    <changeSet author="pinnacl" id="ddl-0000-02">
         <!-- Create _link_school_and_addresses -->
         <createTable tableName="_link_school_and_addresses">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -110,30 +110,30 @@
     </changeSet>
 
     <!-- Add Foreign Keys -->
-    <changeSet author="pinnacl" id="ddl-0017-03">
-        <addForeignKeyConstraint baseColumnNames="address_id"
-                                 baseTableName="_link_school_and_addresses"
-                                 constraintName="fk_school_and_addresses"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="addresses"/>
-        <addForeignKeyConstraint baseColumnNames="school_id"
-                                 baseTableName="_link_school_and_addresses"
-                                 constraintName="fk_address_and_schools"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="schools"/>
+<!--    <changeSet author="pinnacl" id="ddl-0017-03">-->
+<!--        <addForeignKeyConstraint baseColumnNames="address_id"-->
+<!--                                 baseTableName="_link_school_and_addresses"-->
+<!--                                 constraintName="fk_school_and_addresses"-->
+<!--                                 deferrable="false"-->
+<!--                                 initiallyDeferred="false"-->
+<!--                                 onDelete="RESTRICT"-->
+<!--                                 onUpdate="RESTRICT"-->
+<!--                                 referencedColumnNames="id"-->
+<!--                                 referencedTableName="addresses"/>-->
+<!--        <addForeignKeyConstraint baseColumnNames="school_id"-->
+<!--                                 baseTableName="_link_school_and_addresses"-->
+<!--                                 constraintName="fk_address_and_schools"-->
+<!--                                 deferrable="false"-->
+<!--                                 initiallyDeferred="false"-->
+<!--                                 onDelete="RESTRICT"-->
+<!--                                 onUpdate="RESTRICT"-->
+<!--                                 referencedColumnNames="id"-->
+<!--                                 referencedTableName="schools"/>-->
 
-    </changeSet>
+<!--    </changeSet>-->
 
     <!-- Create Link Tables -->
-    <changeSet author="pinnacl" id="ddl-0017-04">
+    <changeSet author="pinnacl" id="ddl-0000-03">
         <!-- Create _link_school_and_tuition_fee -->
         <createTable tableName="_link_school_and_tuition_fee">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -149,7 +149,7 @@
     </changeSet>
 
     <!-- Add Foreign Keys -->
-    <changeSet author="pinnacl" id="ddl-0017-05">
+    <changeSet author="pinnacl" id="ddl-0000-04">
         <addForeignKeyConstraint baseColumnNames="tuition_fee_id"
                                  baseTableName="_link_school_and_tuition_fee"
                                  constraintName="fk_school_and_tuition_fees"
@@ -173,7 +173,7 @@
 
 
     <!-- Create Link Tables -->
-    <changeSet author="pinnacl" id="ddl-0017-06">
+    <changeSet author="pinnacl" id="ddl-0000-05">
         <!-- Create _link_school_and_term -->
         <createTable tableName="_link_school_and_term">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -189,7 +189,7 @@
     </changeSet>
 
     <!-- Add Foreign Keys -->
-    <changeSet author="pinnacl" id="ddl-0017-07">
+    <changeSet author="pinnacl" id="ddl-0000-06">
         <addForeignKeyConstraint baseColumnNames="term_id"
                                  baseTableName="_link_school_and_term"
                                  constraintName="fk_school_and_terms"

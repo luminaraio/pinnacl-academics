@@ -1,12 +1,12 @@
-package io.pinnacl.core.education.school;
+package io.pinnacl.academics.school;
 
 import io.pinnacl.commons.validation.BaseDomainValidator;
 import io.pinnacl.commons.validation.StructuralValidator;
 import io.pinnacl.commons.validation.UniqueConstraintsValidator;
 import io.pinnacl.commons.validation.Validator;
-import io.pinnacl.core.education.school.data.domain.School;
-import io.pinnacl.core.education.school.data.persistence.SchoolEntity;
-import io.pinnacl.core.education.school.repository.SchoolRepository;
+import io.pinnacl.academics.school.data.domain.School;
+import io.pinnacl.academics.school.data.persistence.SchoolEntity;
+import io.pinnacl.academics.school.repository.SchoolRepository;
 
 import java.util.List;
 

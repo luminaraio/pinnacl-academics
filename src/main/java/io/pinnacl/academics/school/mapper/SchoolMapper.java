@@ -1,10 +1,11 @@
-package io.pinnacl.core.education.school.mapper;
+package io.pinnacl.academics.school.mapper;
 
+import io.pinnacl.academics.school.data.domain.ImageObject;
+import io.pinnacl.academics.school.data.domain.School;
+import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import io.pinnacl.commons.data.mapper.JsonMapper;
-import io.pinnacl.core.education.school.data.domain.School;
-import io.pinnacl.core.education.school.data.persistence.SchoolEntity;
-import io.pinnacl.core.organisation.data.domain.ImageObject;
-import io.pinnacl.core.organisation.mapper.PostalAddressMapper;
+import io.pinnacl.academics.school.mapper.TermMapper;
+import io.pinnacl.academics.school.mapper.TuitionFeeMapper;
 import io.vertx.core.json.JsonObject;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -23,7 +24,7 @@ import java.util.Objects;
 @Mapper(imports = {
         Objects.class, JsonMapper.class, String.class
 }, uses = {
-        TermMapper.class, TuitionFeeMapper.class, PostalAddressMapper.class
+        TermMapper.class, TuitionFeeMapper.class,
 })
 public interface SchoolMapper extends io.pinnacl.commons.data.mapper.Mapper<School, SchoolEntity> {
     SchoolMapper INSTANCE = Mappers.getMapper(SchoolMapper.class);

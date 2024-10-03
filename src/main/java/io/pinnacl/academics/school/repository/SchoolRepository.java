@@ -1,9 +1,9 @@
-package io.pinnacl.core.education.school.repository;
+package io.pinnacl.academics.school.repository;
 
 import io.pinnacl.commons.repository.BaseJpaRepository;
 import io.pinnacl.commons.repository.RetrievalBy;
 import io.pinnacl.commons.repository.UniqueConstraints;
-import io.pinnacl.core.education.school.data.persistence.SchoolEntity;
+import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import org.hibernate.reactive.mutiny.Mutiny;
 
 public class SchoolRepository extends BaseJpaRepository<SchoolEntity> implements

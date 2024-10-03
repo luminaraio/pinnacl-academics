@@ -1,7 +1,6 @@
-package io.pinnacl.core.education.school.data.persistence;
+package io.pinnacl.academics.school.data.persistence;
 
 import io.pinnacl.commons.data.persistence.BaseEntity;
-import io.pinnacl.core.organisation.data.persistence.AddressEntity;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.*;
@@ -59,12 +58,13 @@ public class SchoolEntity extends BaseEntity {
     @Column(name = "banner", columnDefinition = "jsonb")
     private JsonObject banner;
 
-    @OneToOne(targetEntity = AddressEntity.class, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE
-    })
-    @JoinTable(name = "_link_school_and_addresses", joinColumns = @JoinColumn(name = "school_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
-    private AddressEntity address;
+    // @OneToOne(targetEntity = AddressEntity.class, cascade = {
+    // CascadeType.PERSIST, CascadeType.MERGE
+    // })
+    // @JoinTable(name = "_link_school_and_addresses", joinColumns = @JoinColumn(name =
+    // "school_id"),
+    // inverseJoinColumns = @JoinColumn(name = "address_id"))
+    // private AddressEntity address;
 
     @OneToMany(targetEntity = TuitionFeeEntity.class, orphanRemoval = true, cascade = {
             CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
