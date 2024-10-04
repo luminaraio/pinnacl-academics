@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.pluginHelm)
     alias(libs.plugins.pluginHelmPublish)
 
-//    alias(libs.plugins.pluginGitSemverEnforcer)
+    alias(libs.plugins.pluginGitSemverEnforcer)
 }
 
 def envPostfix = 'local'
