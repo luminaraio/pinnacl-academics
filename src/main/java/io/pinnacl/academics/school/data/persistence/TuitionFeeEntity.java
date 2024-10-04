@@ -24,7 +24,9 @@ public class TuitionFeeEntity extends BaseEntity {
     @Column
     private String name;
 
-    @Type(io.pinnacl.commons.data.persistence.JsonB.class)
-    @Column(name = "amount", columnDefinition = "jsonb")
-    private JsonObject amount;
+    @Column
+    private Double price;
+
+    @Column(name = "price_currency")
+    private String priceCurrency;
 }

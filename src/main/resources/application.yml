@@ -26,11 +26,11 @@ observability:
 storage:
   db:
     host: localhost
-    port: 6550
-    name: academics
-    user: pain
-    password: almighty-push
-    url: jdbc:postgresql://localhost:6550/academics
+    port: 5432
+    name: pinnacl-academics
+    user: luffy
+    password: we-do-not-store-secrets-in-source-control
+    url: jdbc:postgresql://localhost:5432/pinnacl-academics
     useTls: false
     certPath: /tmp/dummy-cert.pem
     maxPool: 5
@@ -60,42 +60,35 @@ features:
         - name: retrieveSchool
         - name: retrieveSchools
         - name: archiveSchool
-
-    schoolApplication:
-      address: applications
-      identifier: id
-      messageTypes:
-        - name: createApplication
-        - name: updateApplication
-        - name: retrieveApplication
-        - name: retrieveApplications
-        - name: archiveApplication
         - name: retrieveApplicationsAnalytics
-      config:
-        templates:
-          applicationConfirmation:
-            template:
-              path: $workingDir/src/main/resources/templates/school-application-confirmation-(messageType).hbs
-              params:
-                title: School Application - Confirmation
-                signature: The Pinnacl Team
-                supportEmail: (supportEmail)
-                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
-          applicationStatus:
-            template:
-              path: $workingDir/src/main/resources/templates/school-application-status-(messageType).hbs
-              params:
-                title: School Application (status)
-                signature: The Pinnacl Team
-                supportEmail: (supportEmail)
-                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
-        notifications:
-          onCreateOrUpdate:
-            sendEmail: true
 
-    language:
-      address: languages
-      identifier: id
-      messageTypes:
-        - name: retrieveLanguages
-        - name: retrieveLanguage
+#    application:
+#      address: applications
+#      identifier: id
+#      messageTypes:
+#        - name: createAcademicApplication
+#        - name: updateAcademicApplication
+#        - name: retrieveAcademicApplication
+#        - name: retrieveAcademicApplications
+#        - name: archiveAcademicApplication
+#      config:
+#        templates:
+#          applicationConfirmation:
+#            template:
+#              path: $workingDir/src/main/resources/templates/school-application-confirmation-(messageType).hbs
+#              params:
+#                title: School Admission - Confirmation
+#                signature: The Pinnacl Team
+#                supportEmail: (supportEmail)
+#                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
+#          applicationStatus:
+#            template:
+#              path: $workingDir/src/main/resources/templates/school-application-status-(messageType).hbs
+#              params:
+#                title: School Admission (status)
+#                signature: The Pinnacl Team
+#                supportEmail: (supportEmail)
+#                plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
+#        notifications:
+#          onCreateOrUpdate:
+#            sendEmail: true

@@ -5,14 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <!-- DDLs -->
-    <include file="migrations/changelog/ddl/ddl-0000-add-tables-terms-tuition-schools-and-relationship.xml"/>
-    <include file="migrations/changelog/ddl/ddl-0001-add-application-table-definition.xml"/>
+    <!-- Changeset 01 -->
+    <include file="migrations/changelog/ddl/ddl-0000.xml"/>
+    <include file="migrations/changelog/ddl/ddl-0001-schools-management.xml"/>
+    <include file="migrations/changelog/ddl/ddl-0002-admissions-management.xml"/>
 
+    <!-- Changeset 02 -->
 
-
-    <!-- Data -->
-    <!-- Global Dataset -->
-<!--    <include file="migrations/changelog/data/data-0001-academics.xml"/>-->
 
 </databaseChangeLog>

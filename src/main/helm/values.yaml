@@ -1,4 +1,4 @@
-﻿# Default values for pinnacl-core.
+﻿# Default values for pinnacl-academics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -17,7 +17,7 @@ imagePullSecret:
 
 image:
   registry: luminara.registry.jetbrains.space/p/pi/pinnacl-hub
-  repository: luminara/pinnacl-core
+  repository: luminara/pinnacl-academics
   tag: ${projectVersion}
   pullPolicy: Always
 

@@ -96,7 +96,7 @@ features:
               {{ - $templateDir := "/app/resources" }}
               path: {{ printf "%s/templates/school-application-confirmation-(messageType).hbs" $templateDir }}
               params:
-                title: School Application - Confirmation
+                title: School Admission - Confirmation
                 signature: The Pinnacl Team
                 supportEmail: (supportEmail)
                 plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png
@@ -105,7 +105,7 @@ features:
               {{ - $templateDir := "/app/resources" }}
               path: {{ printf "%s/templates/school-application-status-(messageType).hbs" $templateDir }}
               params:
-                title: School Application (status)
+                title: School Admission (status)
                 signature: The Pinnacl Team
                 supportEmail: (supportEmail)
                 plazzaaLogoUrl: https://s3.eu-west-2.amazonaws.com/dev.pinnacl.dev/asset/74e79038-8488-4aec-ac8a-faf321a6a488/20240610120642563/logo.png

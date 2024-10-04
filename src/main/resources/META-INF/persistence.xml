@@ -8,10 +8,16 @@
         <provider>org.hibernate.reactive.provider.ReactivePersistenceProvider</provider>
         <!--        <exclude-unlisted-classes>true</exclude-unlisted-classes>-->
 
-        <class>io.pinnacl.core.education.school.data.persistence.TermEntity</class>
-        <class>io.pinnacl.core.education.school.data.persistence.TuitionFeeEntity</class>
-        <class>io.pinnacl.core.education.school.data.persistence.SchoolEntity</class>
-        <class>io.pinnacl.core.education.application.data.persistence.ApplicationEntity</class>
+        <class>io.pinnacl.commons.features.data.persistence.PinnaclFeatureEntity</class>
+        <class>io.pinnacl.commons.forms.data.persistence.DocumentEntity</class>
+
+        <class>io.pinnacl.academics.school.data.persistence.TermEntity</class>
+        <class>io.pinnacl.academics.school.data.persistence.TuitionFeeEntity</class>
+        <class>io.pinnacl.academics.school.data.persistence.SchoolMetadataEntity</class>
+        <class>io.pinnacl.academics.school.data.persistence.SchoolEntity</class>
+
+        <class>io.pinnacl.academics.admissions.data.persistence.AdmissionMetadataEntity</class>
+        <class>io.pinnacl.academics.admissions.data.persistence.AdmissionEntity</class>
 
         <properties>
 

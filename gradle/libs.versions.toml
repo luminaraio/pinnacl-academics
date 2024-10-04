@@ -1,7 +1,7 @@
 [versions]
 
 # Plugins
-pluginShadow = "8.1.1"
+pluginShadow = "8.3.3"
 pluginSpotless = "6.25.0"
 pluginSpotbugs = "6.0.23"
 pluginVersionsByBen = "0.51.0"
@@ -19,7 +19,7 @@ pluginGitSemverEnforcer = "0.0.3-SNAPSHOT"
 # Project dependencies
 
 # Dependencies: Pinnacl
-libraryPinnaclCommons = "24.7.0-SNAPSHOT"
+libraryPinnaclCommons = "24.7.0"
 
 
 # Dependencies: Vert.x
@@ -63,7 +63,7 @@ libraryOngresScram = "2.1"
 
 [plugins]
 
-pluginShadow = { id = "com.github.johnrengelman.shadow", version.ref = "pluginShadow" }
+pluginShadow = { id = "com.gradleup.shadow", version.ref = "pluginShadow" }
 pluginSpotless = { id = "com.diffplug.spotless", version.ref = "pluginSpotless" }
 pluginSpotbugs = { id = "com.github.spotbugs", version.ref = "pluginSpotbugs" }
 

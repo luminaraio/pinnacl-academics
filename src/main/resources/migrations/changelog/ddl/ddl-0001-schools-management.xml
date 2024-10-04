@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <property name="uuid_type" value="uuid" dbms="h2"/>
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_type" value="varchar(255)" dbms="mysql"/>
+
+    <property name="uuid_function" value="random_uuid()" dbms="h2"/>
+    <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
+    <property name="uuid_function" value="uuid()" dbms="mysql"/>
+
+    <!-- Create auxiliary tables -->
+    <changeSet author="pinnacl-team" id="ddl-0001-01-create-school-auxiliary-tables">
+
+        <createTable tableName="terms">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="datetime"/>
+            <column name="end_date" type="datetime"/>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="tuition_fees">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="number" defaultValueNumeric="0.0"/>
+            <column name="price_currency" type="varchar2(3)"/>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="schools_metadata">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_name" type="text"/>
+            <column name="totalStudents" type="int" defaultValueNumeric="0"/>
+            <column name="data" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="pinnacl_features">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValueBoolean="false"/>
+            <column name="data" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet author="pinnacl-team" id="ddl-0001-02-create-schools-link-tables-and-foreign-keys">
+
+        <createTable tableName="schools">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="alternate_name" type="text"/>
+            <column name="type" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organisation" type="jsonb">>
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Link Tables & Foreign Keys -->
+        <!-- _link_schools_and_metadata -->
+        <createTable tableName="_link_schools_and_metadata">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="metadata_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="metadata_id"
+                                 baseTableName="_link_schools_and_metadata"
+                                 constraintName="fk_school_and_metadata"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools_metadata"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_metadata"
+                                 constraintName="fk_schools_and_metadata"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+        <!-- _link_schools_and_tuition_fees -->
+        <createTable tableName="_link_schools_and_tuition_fees">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tuition_fee_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="tuition_fee_id"
+                                 baseTableName="_link_schools_and_tuition_fees"
+                                 constraintName="fk_school_and_tuition_fees"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools_metadata"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_tuition_fees"
+                                 constraintName="fk_schools_and_tuition_fee"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+        <!-- _link_schools_and_terms -->
+        <createTable tableName="_link_schools_and_terms">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="term_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="term_id"
+                                 baseTableName="_link_schools_and_terms"
+                                 constraintName="fk_school_and_terms"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools_metadata"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_terms"
+                                 constraintName="fk_schools_and_term"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+        <!-- _link_schools_and_pinnacl_features -->
+        <createTable tableName="_link_schools_and_pinnacl_features">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="feature_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="feature_id"
+                                 baseTableName="_link_schools_and_pinnacl_features"
+                                 constraintName="fk_school_and_features"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools_metadata"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_pinnacl_features"
+                                 constraintName="fk_schools_and_feature"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+    </changeSet>
+
+</databaseChangeLog>

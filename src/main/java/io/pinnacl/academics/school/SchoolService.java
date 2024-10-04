@@ -7,7 +7,6 @@ import io.pinnacl.commons.repository.Repository;
 import io.pinnacl.commons.service.DefaultRecordService;
 import io.pinnacl.commons.validation.Validator;
 import io.pinnacl.academics.school.data.domain.School;
-import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import io.vertx.core.Future;
 
 public class SchoolService extends DefaultRecordService<School, SchoolEntity> {
