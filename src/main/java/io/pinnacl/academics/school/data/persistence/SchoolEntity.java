@@ -2,7 +2,9 @@ package io.pinnacl.academics.school.data.persistence;
 
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.commons.data.persistence.BaseEntity;
-import io.pinnacl.commons.features.data.persistence.PinnaclFeatureEntity;
+import io.pinnacl.commons.features.traits.data.persistence.PinnaclTraitEntity;
+import io.pinnacl.commons.features.postaladdress.data.persistence.PostalAddressEntity;
+import io.pinnacl.commons.features.sociallinks.data.persistence.SocialLinkEntity;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import jakarta.persistence.*;
@@ -55,26 +57,22 @@ public class SchoolEntity extends BaseEntity {
     @Column(name = "contact_point", columnDefinition = "jsonb")
     private JsonObject contactPoint;
 
-
     @Type(io.pinnacl.commons.data.persistence.JsonBArray.class)
     @Column(name = "extra_contact_point", columnDefinition = "jsonb")
     private JsonArray extraContactPoints;
-
-//    @Type(io.pinnacl.commons.data.persistence.JsonB.class)
-//    @Column(name = "organisation", columnDefinition = "jsonb")
-//    private JsonObject organisation;
 
     @OneToOne(targetEntity = PostalAddressEntity.class, orphanRemoval = true, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     })
     @JoinTable(name = "_link_schools_and_addresses", joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
-    private List<PostalAddressEntity> address;
+    private PostalAddressEntity address;
 
     @OneToOne(targetEntity = SocialLinkEntity.class, orphanRemoval = true, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     })
-    @JoinTable(name = "_link_schools_and_social_links", joinColumns = @JoinColumn(name = "school_id"),
+    @JoinTable(name = "_link_schools_and_social_links",
+            joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "social_links_id"))
     private List<SocialLinkEntity> socialLinks;
 
@@ -100,13 +98,13 @@ public class SchoolEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "term_id"))
     private List<TermEntity> terms;
 
-    @OneToMany(targetEntity = PinnaclFeatureEntity.class, orphanRemoval = true, cascade = {
+    @OneToMany(targetEntity = PinnaclTraitEntity.class, orphanRemoval = true, cascade = {
             CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
     }, fetch = FetchType.LAZY)
-    @JoinTable(name = "_link_schools_and_pinnacl_features",
+    @JoinTable(name = "_link_schools_and_pinnacl_traits",
             joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "feature_id"))
-    private List<PinnaclFeatureEntity> features;
+    private List<PinnaclTraitEntity> traits;
 
 
 }

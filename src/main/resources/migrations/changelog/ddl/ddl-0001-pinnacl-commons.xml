@@ -14,7 +14,87 @@
     <property name="uuid_function" value="uuid()" dbms="mysql"/>
 
     <!-- Create auxiliary tables -->
-    <changeSet author="pinnacl-team" id="ddl-0002-01-create-admissions-auxiliary-tables">
+    <changeSet author="pinnacl-team" id="ddl-0001-01-create-pinnacl-commons-tables">
+
+        <createTable tableName="pinnacl_traits">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValueBoolean="false"/>
+            <column name="data" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="postal_addresses">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="street_address" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_locality" type="text"/>
+            <column name="address_region" type="text"/>
+            <column name="postal_code" type="text"/>
+            <column name="post_office_box_number" type="text"/>
+            <column name="country_name" type="text"/>
+            <column name="country_code" type="text"/>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="social_links">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="url" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alternate_text" type="text"/>
+            <column name="network" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
         <createTable tableName="forms_documents">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -53,127 +133,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <createTable tableName="admissions_metadata">
-            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="type" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="gender" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="data" type="jsonb">
-                <constraints nullable="false"/>
-            </column>
-            <column name="owner_id" type="${uuid_type}"/>
-            <column name="deleted" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="int" defaultValueNumeric="0"/>
-            <column name="created_by" type="${uuid_type}"/>
-            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_by" type="${uuid_type}"/>
-            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-    </changeSet>
-
-    <changeSet author="pinnacl-team" id="ddl-0002-02-create-admissions-link-tables-and-foreign-keys">
-
-        <createTable tableName="admissions">
-            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="type" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="owner_id" type="${uuid_type}"/>
-            <column name="deleted" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="int" defaultValueNumeric="0"/>
-            <column name="created_by" type="${uuid_type}"/>
-            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_by" type="${uuid_type}"/>
-            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <!-- Link Tables & Foreign Keys -->
-        <!-- _link_admissions_and_metadata -->
-        <createTable tableName="_link_admissions_and_metadata">
-            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="admission_id" type="${uuid_type}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="metadata_id" type="${uuid_type}">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseColumnNames="metadata_id"
-                                 baseTableName="_link_admissions_and_metadata"
-                                 constraintName="fk_admission_and_metadata"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="admissions_metadata"/>
-        <addForeignKeyConstraint baseColumnNames="admission_id"
-                                 baseTableName="_link_admissions_and_metadata"
-                                 constraintName="fk_admissions_and_metadata"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="admissions"/>
-
-        <!-- _link_admissions_and_documents -->
-        <createTable tableName="_link_admissions_and_documents">
-            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="admission_id" type="${uuid_type}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="document_id" type="${uuid_type}">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseColumnNames="document_id"
-                                 baseTableName="_link_admissions_and_documents"
-                                 constraintName="fk_admission_and_documents"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="forms_documents"/>
-        <addForeignKeyConstraint baseColumnNames="admission_id"
-                                 baseTableName="_link_admissions_and_documents"
-                                 constraintName="fk_admissions_and_document"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="admissions"/>
-
     </changeSet>
 
 </databaseChangeLog>

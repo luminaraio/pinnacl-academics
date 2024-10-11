@@ -4,7 +4,7 @@ import io.pinnacl.academics.admissions.data.domain.Admission;
 import io.pinnacl.academics.admissions.data.persistence.AdmissionEntity;
 import io.pinnacl.academics.school.data.domain.metadata.Metadata;
 import io.pinnacl.academics.school.mapper.SchoolMapper;
-import io.pinnacl.commons.forms.mapper.DocumentMapper;
+import io.pinnacl.commons.features.forms.mapper.DocumentMapper;
 import io.vertx.core.json.JsonObject;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;

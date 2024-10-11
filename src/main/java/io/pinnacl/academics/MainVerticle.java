@@ -55,7 +55,7 @@ public final class MainVerticle extends AbstractMainVerticle {
                                            Map<String, AsyncMap<String, Object>> sharedMaps,
                                            Mutiny.SessionFactory sessionFactory) {
         return validateRequiredSharedMaps(sharedMaps, Set.of(KEY_GATEWAY_SERVICE, KEY_LANGUAGES))
-                .flatMap(_ -> verticleConfigs(config, Set.of("service", SCHOOL, APPLICATION)))
+                .flatMap(_ -> verticleConfigs(config, Set.of("service", SCHOOL)))
                 .flatMap(verticleConfigs -> deployVerticles(config.asJsonObject(), verticleConfigs,
                         sharedMaps, sessionFactory));
     }
@@ -65,6 +65,7 @@ public final class MainVerticle extends AbstractMainVerticle {
                                          Map<String, AsyncMap<String, Object>> sharedMaps,
                                          Mutiny.SessionFactory sessionFactory) {
         return Future.succeededFuture();
+
         //
         // VerticleConfig applicationVerticleConfig = verticleConfigs.get(APPLICATION);
         //

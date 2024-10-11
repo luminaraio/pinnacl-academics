@@ -4,7 +4,7 @@ import io.pinnacl.academics.admissions.data.Status;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import io.pinnacl.commons.data.persistence.BaseEntity;
-import io.pinnacl.commons.forms.data.persistence.DocumentEntity;
+import io.pinnacl.commons.features.forms.data.persistence.DocumentEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

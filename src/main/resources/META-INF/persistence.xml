@@ -8,8 +8,10 @@
         <provider>org.hibernate.reactive.provider.ReactivePersistenceProvider</provider>
         <!--        <exclude-unlisted-classes>true</exclude-unlisted-classes>-->
 
-        <class>io.pinnacl.commons.features.data.persistence.PinnaclFeatureEntity</class>
-        <class>io.pinnacl.commons.forms.data.persistence.DocumentEntity</class>
+        <class>io.pinnacl.commons.features.postaladdress.data.persistence.PostalAddressEntity</class>
+        <class>io.pinnacl.commons.features.sociallinks.data.persistence.SocialLinkEntity</class>
+        <class>io.pinnacl.commons.features.traits.data.persistence.PinnaclTraitEntity</class>
+        <class>io.pinnacl.commons.features.forms.data.persistence.DocumentEntity</class>
 
         <class>io.pinnacl.academics.school.data.persistence.TermEntity</class>
         <class>io.pinnacl.academics.school.data.persistence.TuitionFeeEntity</class>

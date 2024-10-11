@@ -14,7 +14,7 @@
     <property name="uuid_function" value="uuid()" dbms="mysql"/>
 
     <!-- Create auxiliary tables -->
-    <changeSet author="pinnacl-team" id="ddl-0001-01-create-school-auxiliary-tables">
+    <changeSet author="pinnacl-team" id="ddl-0002-01-create-school-auxiliary-tables">
 
         <createTable tableName="terms">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -91,35 +91,9 @@
             </column>
         </createTable>
 
-        <createTable tableName="pinnacl_features">
-            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="name" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="enabled" type="boolean" defaultValueBoolean="false"/>
-            <column name="data" type="jsonb">
-                <constraints nullable="false"/>
-            </column>
-            <column name="owner_id" type="${uuid_type}"/>
-            <column name="deleted" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="int" defaultValueNumeric="0"/>
-            <column name="created_by" type="${uuid_type}"/>
-            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_by" type="${uuid_type}"/>
-            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
     </changeSet>
 
-    <changeSet author="pinnacl-team" id="ddl-0001-02-create-schools-link-tables-and-foreign-keys">
+    <changeSet author="pinnacl-team" id="ddl-0002-02-create-schools-link-tables-and-foreign-keys">
 
         <createTable tableName="schools">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -245,21 +219,21 @@
                                  referencedColumnNames="id"
                                  referencedTableName="schools"/>
 
-        <!-- _link_schools_and_pinnacl_features -->
-        <createTable tableName="_link_schools_and_pinnacl_features">
+        <!-- _link_schools_and_pinnacl_traits -->
+        <createTable tableName="_link_schools_and_pinnacl_traits">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="school_id" type="${uuid_type}">
                 <constraints nullable="false"/>
             </column>
-            <column name="feature_id" type="${uuid_type}">
+            <column name="trait_id" type="${uuid_type}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="feature_id"
-                                 baseTableName="_link_schools_and_pinnacl_features"
-                                 constraintName="fk_school_and_features"
+        <addForeignKeyConstraint baseColumnNames="trait_id"
+                                 baseTableName="_link_schools_and_pinnacl_traits"
+                                 constraintName="fk_school_and_traits"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="RESTRICT"
@@ -267,8 +241,8 @@
                                  referencedColumnNames="id"
                                  referencedTableName="schools_metadata"/>
         <addForeignKeyConstraint baseColumnNames="school_id"
-                                 baseTableName="_link_schools_and_pinnacl_features"
-                                 constraintName="fk_schools_and_feature"
+                                 baseTableName="_link_schools_and_pinnacl_traits"
+                                 constraintName="fk_schools_and_trait"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="RESTRICT"

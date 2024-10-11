@@ -7,8 +7,9 @@
 
     <!-- Changeset 01 -->
     <include file="migrations/changelog/ddl/ddl-0000.xml"/>
-    <include file="migrations/changelog/ddl/ddl-0001-schools-management.xml"/>
-    <include file="migrations/changelog/ddl/ddl-0002-admissions-management.xml"/>
+    <include file="migrations/changelog/ddl/ddl-0001-pinnacl-commons.xml"/>
+    <include file="migrations/changelog/ddl/ddl-0002-schools-management.xml"/>
+    <include file="migrations/changelog/ddl/ddl-0003-admissions-management.xml"/>
 
     <!-- Changeset 02 -->
 

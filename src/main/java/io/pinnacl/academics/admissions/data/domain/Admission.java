@@ -1,9 +1,9 @@
 package io.pinnacl.academics.admissions.data.domain;
 
 import io.pinnacl.academics.admissions.data.Status;
-import io.pinnacl.commons.forms.data.domain.Document;
-import io.pinnacl.commons.forms.data.domain.Form;
-import io.pinnacl.commons.forms.data.domain.FormKind;
+import io.pinnacl.commons.features.forms.data.domain.Document;
+import io.pinnacl.commons.features.forms.data.domain.Form;
+import io.pinnacl.commons.features.forms.data.domain.FormKind;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.academics.school.data.domain.School;
 import io.pinnacl.commons.data.domain.Domain;
