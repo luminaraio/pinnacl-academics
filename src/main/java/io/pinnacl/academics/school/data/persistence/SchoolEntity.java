@@ -58,7 +58,7 @@ public class SchoolEntity extends BaseEntity {
     private JsonObject contactPoint;
 
     @Type(io.pinnacl.commons.data.persistence.JsonBArray.class)
-    @Column(name = "extra_contact_point", columnDefinition = "jsonb")
+    @Column(name = "extra_contact_points", columnDefinition = "jsonb")
     private JsonArray extraContactPoints;
 
     @OneToOne(targetEntity = PostalAddressEntity.class, orphanRemoval = true, cascade = {
@@ -73,7 +73,7 @@ public class SchoolEntity extends BaseEntity {
     })
     @JoinTable(name = "_link_schools_and_social_links",
             joinColumns = @JoinColumn(name = "school_id"),
-            inverseJoinColumns = @JoinColumn(name = "social_links_id"))
+            inverseJoinColumns = @JoinColumn(name = "social_link_id"))
     private List<SocialLinkEntity> socialLinks;
 
     @OneToOne(targetEntity = SchoolMetadataEntity.class, cascade = {

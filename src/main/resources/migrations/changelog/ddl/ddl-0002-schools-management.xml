@@ -107,9 +107,11 @@
             <column name="type" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="organisation" type="jsonb">>
-                <constraints nullable="false"/>
-            </column>
+            <column name="number_of_employees" type="int"/>
+            <column name="logo" type="jsonb"/>
+            <column name="website" type="jsonb"/>
+            <column name="contact_point" type="jsonb"/>
+            <column name="extra_contact_points" type="jsonb"/>
             <column name="owner_id" type="${uuid_type}"/>
             <column name="deleted" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
