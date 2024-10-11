@@ -24,24 +24,4 @@ public class SchoolService extends DefaultRecordService<School, SchoolEntity> {
         return new SchoolService(mapper, repository, validator);
     }
 
-    @Override
-    public Future<School> onCreate(AuthUser authUser, School school) {
-        // return orgWithCountryAndSchool(authUser, school)
-        // .flatMap(schoolWithCountry -> super.onCreate(authUser, schoolWithCountry));
-        return super.onCreate(authUser, school);
-    }
-
-
-    @Override
-    public Future<School> onUpdate(AuthUser authUser, School school) {
-        // return orgWithCountryAndSchool(authUser, school)
-        // .flatMap(schoolWithCountry -> super.onUpdate(authUser, schoolWithCountry));
-        return super.onUpdate(authUser, school);
-    }
-
-    // private Future<School> orgWithCountryAndSchool(AuthUser authUser, School school) {
-    // return _countryService.retrieveByName(authUser, school.address().addressCountry().name())
-    // .map(school::withCountry);
-    // }
-
 }

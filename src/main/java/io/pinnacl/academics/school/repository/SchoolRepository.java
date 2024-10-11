@@ -9,21 +9,11 @@ import org.hibernate.reactive.mutiny.Mutiny;
 public class SchoolRepository extends BaseJpaRepository<SchoolEntity> implements
                               RetrievalBy<SchoolEntity>, UniqueConstraints<SchoolEntity> {
 
-    private final TermRepository _termRepository;
-    private final TuitionFeeRepository _tuitionFeeRepository;
-
-    protected SchoolRepository(Class<SchoolEntity> clazz, Mutiny.SessionFactory sessionFactory,
-                               TermRepository termRepository,
-                               TuitionFeeRepository tuitionFeeRepository) {
+    protected SchoolRepository(Class<SchoolEntity> clazz, Mutiny.SessionFactory sessionFactory) {
         super(clazz, sessionFactory);
-        _termRepository       = termRepository;
-        _tuitionFeeRepository = tuitionFeeRepository;
     }
 
-    public static SchoolRepository create(Mutiny.SessionFactory sessionFactory,
-                                          TermRepository termRepository,
-                                          TuitionFeeRepository tuitionFeeRepository) {
-        return new SchoolRepository(SchoolEntity.class, sessionFactory, termRepository,
-                tuitionFeeRepository);
+    public static SchoolRepository create(Mutiny.SessionFactory sessionFactory) {
+        return new SchoolRepository(SchoolEntity.class, sessionFactory);
     }
 }

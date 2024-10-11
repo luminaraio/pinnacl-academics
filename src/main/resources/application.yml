@@ -60,7 +60,7 @@ features:
         - name: retrieveSchool
         - name: retrieveSchools
         - name: archiveSchool
-        - name: retrieveApplicationsAnalytics
+#        - name: retrieveApplicationsAnalytics
 
 #    application:
 #      address: applications

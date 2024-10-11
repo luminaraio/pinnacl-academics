@@ -126,6 +126,100 @@
         </createTable>
 
         <!-- Link Tables & Foreign Keys -->
+
+        <!-- _link_schools_and_pinnacl_traits -->
+        <createTable tableName="_link_schools_and_pinnacl_traits">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trait_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="trait_id"
+                                 baseTableName="_link_schools_and_pinnacl_traits"
+                                 constraintName="fk_school_and_traits"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools_metadata"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_pinnacl_traits"
+                                 constraintName="fk_schools_and_trait"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+        <!-- _link_schools_and_pinnacl_traits -->
+        <createTable tableName="_link_schools_and_addresses">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="address_id"
+                                 baseTableName="_link_schools_and_addresses"
+                                 constraintName="fk_school_and_postal_addresses"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="postal_addresses"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_addresses"
+                                 constraintName="fk_schools_and_postal_address"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+        <!-- _link_schools_and_pinnacl_traits -->
+        <createTable tableName="_link_schools_and_social_links">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="social_link_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="social_link_id"
+                                 baseTableName="_link_schools_and_social_links"
+                                 constraintName="fk_school_and_social_links"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="social_links"/>
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_social_links"
+                                 constraintName="fk_schools_and_social_link"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
         <!-- _link_schools_and_metadata -->
         <createTable tableName="_link_schools_and_metadata">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
@@ -212,37 +306,6 @@
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_terms"
                                  constraintName="fk_schools_and_term"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="schools"/>
-
-        <!-- _link_schools_and_pinnacl_traits -->
-        <createTable tableName="_link_schools_and_pinnacl_traits">
-            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="school_id" type="${uuid_type}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="trait_id" type="${uuid_type}">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseColumnNames="trait_id"
-                                 baseTableName="_link_schools_and_pinnacl_traits"
-                                 constraintName="fk_school_and_traits"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 onDelete="RESTRICT"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="schools_metadata"/>
-        <addForeignKeyConstraint baseColumnNames="school_id"
-                                 baseTableName="_link_schools_and_pinnacl_traits"
-                                 constraintName="fk_schools_and_trait"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="RESTRICT"
