@@ -2,9 +2,9 @@ package io.pinnacl.academics.school.data.domain.metadata;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.commons.data.domain.Domain;
+import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
 
 import java.util.Set;
 

@@ -34,6 +34,8 @@ public interface SchoolMetadataMapper extends
 
     @InheritInverseConfiguration
     @Mapping(target = "data", expression = "java( SchoolMetadataMapper.asData(domain) )")
+    @Mapping(target = "type", expression = "java( domain.type() )")
+    @Mapping(target = "numberOfStudents", expression = "java( domain.numberOfStudents() )")
     SchoolMetadataEntity asEntity(Metadata domain);
 
     @Override

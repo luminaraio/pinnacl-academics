@@ -11,7 +11,7 @@ service:
       - languages
 
 observability:
-  enabled: true
+  enabled: false
   port: 9092
   metrics:
     enabled: true

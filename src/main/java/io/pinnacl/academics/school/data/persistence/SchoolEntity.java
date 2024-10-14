@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "schools")
@@ -74,7 +75,7 @@ public class SchoolEntity extends BaseEntity {
     @JoinTable(name = "_link_schools_and_social_links",
             joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "social_link_id"))
-    private List<SocialLinkEntity> socialLinks;
+    private Set<SocialLinkEntity> socialLinks;
 
     @OneToOne(targetEntity = SchoolMetadataEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
@@ -89,22 +90,21 @@ public class SchoolEntity extends BaseEntity {
     @JoinTable(name = "_link_schools_and_tuition_fees",
             joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "tuition_fee_id"))
-    private List<TuitionFeeEntity> tuitionFees;
+    private Set<TuitionFeeEntity> tuitionFees;
 
     @OneToMany(targetEntity = TermEntity.class, orphanRemoval = true, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     }, fetch = FetchType.LAZY)
-    @JoinTable(name = "_link_school_and_term", joinColumns = @JoinColumn(name = "school_id"),
+    @JoinTable(name = "_link_schools_and_terms", joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "term_id"))
-    private List<TermEntity> terms;
+    private Set<TermEntity> terms;
 
-    @OneToMany(targetEntity = PinnaclTraitEntity.class, orphanRemoval = true, cascade = {
-            CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
-    }, fetch = FetchType.LAZY)
-    @JoinTable(name = "_link_schools_and_pinnacl_traits",
-            joinColumns = @JoinColumn(name = "school_id"),
-            inverseJoinColumns = @JoinColumn(name = "feature_id"))
-    private List<PinnaclTraitEntity> traits;
+    // @OneToMany(targetEntity = PinnaclTraitEntity.class, orphanRemoval = true,
+    // fetch = FetchType.LAZY)
+    // @JoinTable(name = "_link_schools_and_pinnacl_traits",
+    // joinColumns = @JoinColumn(name = "school_id"),
+    // inverseJoinColumns = @JoinColumn(name = "trait_id"))
+    // private Set<PinnaclTraitEntity> traits;
 
 
 }

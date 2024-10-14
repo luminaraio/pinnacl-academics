@@ -72,7 +72,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="principal_name" type="text"/>
-            <column name="totalStudents" type="int" defaultValueNumeric="0"/>
+            <column name="number_of_students" type="int" defaultValueNumeric="0"/>
             <column name="data" type="jsonb">
                 <constraints nullable="false"/>
             </column>
@@ -149,7 +149,7 @@
                                  onDelete="RESTRICT"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="schools_metadata"/>
+                                 referencedTableName="pinnacl_traits"/>
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_pinnacl_traits"
                                  constraintName="fk_schools_and_trait"
@@ -273,7 +273,7 @@
                                  onDelete="RESTRICT"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="schools_metadata"/>
+                                 referencedTableName="tuition_fees"/>
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_tuition_fees"
                                  constraintName="fk_schools_and_tuition_fee"
@@ -304,7 +304,7 @@
                                  onDelete="RESTRICT"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
-                                 referencedTableName="schools_metadata"/>
+                                 referencedTableName="terms"/>
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_terms"
                                  constraintName="fk_schools_and_term"
