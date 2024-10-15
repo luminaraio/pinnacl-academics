@@ -62,15 +62,15 @@ features:
         - name: archiveSchool
 #        - name: retrieveApplicationsAnalytics
 
-#    application:
-#      address: applications
-#      identifier: id
-#      messageTypes:
-#        - name: createAcademicApplication
-#        - name: updateAcademicApplication
-#        - name: retrieveAcademicApplication
-#        - name: retrieveAcademicApplications
-#        - name: archiveAcademicApplication
+    admissions:
+      address: admissions
+      identifier: id
+      messageTypes:
+        - name: createAcademicAdmission
+        - name: updateAcademicAdmission
+        - name: retrieveAcademicAdmissions
+        - name: retrieveAcademicAdmission
+        - name: archiveAcademicAdmission
 #      config:
 #        templates:
 #          applicationConfirmation:

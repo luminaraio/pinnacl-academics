@@ -7,9 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record CollegeAdmission(UUID id, @NotNull SchoolType type, Gender gender, Boolean deleted,
-                               Integer revision, LocalDateTime createdOn, LocalDateTime updatedOn,
-                               UUID createdBy, UUID updatedBy, UUID ownerId, String hash)
+public record CollegeAdmission(UUID id, @NotNull SchoolType type, Boolean deleted, Integer revision,
+                               LocalDateTime createdOn, LocalDateTime updatedOn, UUID createdBy,
+                               UUID updatedBy, UUID ownerId, String hash)
                               implements Metadata {
 
 }

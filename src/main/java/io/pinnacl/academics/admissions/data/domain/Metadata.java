@@ -21,8 +21,6 @@ public sealed interface Metadata extends Domain permits GenericSchoolAdmission, 
 
     SchoolType type();
 
-    Gender gender();
-
     default String name() {
         return null;
     }

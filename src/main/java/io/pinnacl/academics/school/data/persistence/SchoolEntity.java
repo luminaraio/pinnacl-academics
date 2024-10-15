@@ -62,14 +62,14 @@ public class SchoolEntity extends BaseEntity {
     @Column(name = "extra_contact_points", columnDefinition = "jsonb")
     private JsonArray extraContactPoints;
 
-    @OneToOne(targetEntity = PostalAddressEntity.class, orphanRemoval = true, cascade = {
+    @OneToOne(targetEntity = PostalAddressEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     })
     @JoinTable(name = "_link_schools_and_addresses", joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     private PostalAddressEntity address;
 
-    @OneToOne(targetEntity = SocialLinkEntity.class, orphanRemoval = true, cascade = {
+    @OneToOne(targetEntity = SocialLinkEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     })
     @JoinTable(name = "_link_schools_and_social_links",
