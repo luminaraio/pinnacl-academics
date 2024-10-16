@@ -47,11 +47,19 @@ public class AdmissionEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "metadata_id"))
     private AdmissionMetadataEntity metadata;
 
-    @OneToMany(targetEntity = DocumentEntity.class, orphanRemoval = true, cascade = {
+    @OneToMany(targetEntity = DocumentEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
     }, fetch = FetchType.LAZY)
     @JoinTable(name = "_link_admissions_and_documents",
             joinColumns = @JoinColumn(name = "admission_id"),
             inverseJoinColumns = @JoinColumn(name = "document_id"))
     private List<DocumentEntity> documents;
+
+    @OneToMany(targetEntity = AdmissionQuestionAnswerEntity.class, cascade = {
+            CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
+    }, fetch = FetchType.LAZY)
+    @JoinTable(name = "_link_admissions_and_question_answers",
+            joinColumns = @JoinColumn(name = "admission_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_answer_id"))
+    private List<AdmissionQuestionAnswerEntity> questionAnswers;
 }

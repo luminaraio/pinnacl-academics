@@ -4,6 +4,7 @@ import io.pinnacl.academics.school.data.SchoolType;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -11,10 +12,11 @@ public record GenericSchoolAdmission(UUID id, @NotNull SchoolType type, String c
                                      LocalDateTime dateOfBirth, String guardianName,
                                      String guardianOccupation, String guardianEmail,
                                      String guardianTelephone, String guardianAddress,
-                                     String sickness, Set<String> disabilities, Boolean deleted,
+                                     String sickness, Set<String> disabilities,
+                                     Map<String, Object> extraMetadata, Boolean deleted,
                                      Integer revision, LocalDateTime createdOn,
-                                     LocalDateTime updatedOn, UUID createdBy,
-                                     UUID updatedBy, UUID ownerId,
-                                     String hash) implements Metadata {
+                                     LocalDateTime updatedOn, UUID createdBy, UUID updatedBy,
+                                     UUID ownerId, String hash)
+                                    implements Metadata {
 
 }

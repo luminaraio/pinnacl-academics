@@ -6,9 +6,11 @@ import io.pinnacl.commons.data.domain.base.ContactPoint;
 import io.pinnacl.commons.data.domain.base.ImageObject;
 import io.pinnacl.commons.data.domain.base.URL;
 import io.pinnacl.commons.data.mapper.JsonMapper;
-import io.pinnacl.commons.features.traits.mapper.PinnaclTraitMapper;
+import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
+import io.pinnacl.commons.features.forms.data.domain.Question;
 import io.pinnacl.commons.features.postaladdress.mapper.PostalAddressMapper;
 import io.pinnacl.commons.features.sociallinks.mapper.SocialLinkMapper;
+import io.pinnacl.commons.features.traits.mapper.PinnaclTraitMapper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.mapstruct.InheritInverseConfiguration;
@@ -18,6 +20,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Luminara - Pinnacl Project.
@@ -38,6 +41,10 @@ public interface SchoolMapper extends io.pinnacl.commons.data.mapper.Mapper<Scho
             expression = "java( SchoolMapper.fromEntityContactPoint(entity) )")
     @Mapping(target = "extraContactPoints",
             expression = "java( SchoolMapper.fromEntityContactPoints(entity) )")
+    @Mapping(target = "extraAdmissionQuestions",
+            expression = "java( SchoolMapper.fromEntityAdmissionQuestions(entity) )")
+    @Mapping(target = "supportingDocuments",
+            expression = "java( SchoolMapper.fromEntitySupportingDocuments(entity) )")
     School asDomainObject(SchoolEntity entity);
 
     @InheritInverseConfiguration
@@ -47,6 +54,10 @@ public interface SchoolMapper extends io.pinnacl.commons.data.mapper.Mapper<Scho
             expression = "java( SchoolMapper.fromDomainContactPoint(domain) )")
     @Mapping(target = "extraContactPoints",
             expression = "java( SchoolMapper.fromDomainContactPoints(domain) )")
+    @Mapping(target = "extraAdmissionQuestions",
+            expression = "java( SchoolMapper.fromDomainAdmissionQuestions(domain) )")
+    @Mapping(target = "supportingDocuments",
+            expression = "java( SchoolMapper.fromDomainSupportingDocuments(domain) )")
     SchoolEntity asEntity(School domain);
 
     @Override
@@ -85,5 +96,27 @@ public interface SchoolMapper extends io.pinnacl.commons.data.mapper.Mapper<Scho
 
     static List<ContactPoint> fromEntityContactPoints(SchoolEntity entity) {
         return JsonMapper.fromJArray(entity.getExtraContactPoints(), ContactPoint.class);
+    }
+
+    static JsonArray fromDomainAdmissionQuestions(School domain) {
+        var questions = Objects.nonNull(domain.extraAdmissionQuestions())
+                ? List.copyOf(domain.extraAdmissionQuestions()) : List.of();
+        return JsonMapper.toJArray(questions);
+    }
+
+    static Set<Question> fromEntityAdmissionQuestions(SchoolEntity entity) {
+        return Set
+                .copyOf(JsonMapper.fromJArray(entity.getExtraAdmissionQuestions(), Question.class));
+    }
+
+    static JsonArray fromDomainSupportingDocuments(School domain) {
+        var supportingDocuments = Objects.nonNull(domain.supportingDocuments())
+                ? List.copyOf(domain.supportingDocuments()) : List.of();
+        return JsonMapper.toJArray(supportingDocuments);
+    }
+
+    static Set<DocumentDefinition> fromEntitySupportingDocuments(SchoolEntity entity) {
+        return Set.copyOf(
+                JsonMapper.fromJArray(entity.getSupportingDocuments(), DocumentDefinition.class));
     }
 }

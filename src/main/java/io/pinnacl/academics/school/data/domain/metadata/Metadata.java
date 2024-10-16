@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.commons.data.domain.Domain;
+import io.pinnacl.commons.features.forms.data.domain.Question;
 import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
 
 import java.util.Set;
@@ -25,10 +26,6 @@ public sealed interface Metadata extends Domain
     String principalName();
 
     Integer numberOfStudents();
-
-    default Set<DocumentDefinition> supportingDocuments() {
-        return Set.of();
-    }
 
     default String name() {
         return null;

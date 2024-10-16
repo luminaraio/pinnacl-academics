@@ -8,6 +8,8 @@ import io.pinnacl.commons.data.domain.Language;
 import io.pinnacl.commons.data.domain.Organisation;
 import io.pinnacl.commons.data.domain.base.ContactPoint;
 import io.pinnacl.commons.data.domain.base.URL;
+import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
+import io.pinnacl.commons.features.forms.data.domain.Question;
 import io.pinnacl.commons.features.traits.data.domain.PinnaclTrait;
 import io.pinnacl.commons.features.postaladdress.data.domain.PostalAddress;
 import io.pinnacl.commons.features.sociallinks.data.domain.SocialLink;
@@ -18,6 +20,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public record School(UUID id, @NotBlank String name, String description, @NotNull SchoolType type,
@@ -25,10 +28,12 @@ public record School(UUID id, @NotBlank String name, String description, @NotNul
                      @Valid Metadata metadata, String alternateName,
                      @NotNull @Valid ContactPoint contactPoint, @NotNull PostalAddress address,
                      ImageObject logo, @Valid List<SocialLink> socialLinks, @Valid URL website,
-                     Integer numberOfEmployees, @Valid List<ContactPoint> extraContactPoints,
-                     List<PinnaclTrait> features, Boolean deleted, Integer revision,
-                     LocalDateTime createdOn, LocalDateTime updatedOn, UUID createdBy,
-                     UUID updatedBy, UUID ownerId, String hash)
+                     Integer numberOfEmployees, @Valid Set<Question> extraAdmissionQuestions,
+                     @Valid Set<DocumentDefinition> supportingDocuments,
+                     @Valid List<ContactPoint> extraContactPoints, List<PinnaclTrait> features,
+                     Boolean deleted, Integer revision, LocalDateTime createdOn,
+                     LocalDateTime updatedOn, UUID createdBy, UUID updatedBy, UUID ownerId,
+                     String hash)
                     implements Organisation {
 
     @Override

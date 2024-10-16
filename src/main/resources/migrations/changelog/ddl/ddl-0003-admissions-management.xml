@@ -44,6 +44,35 @@
             </column>
         </createTable>
 
+
+        <createTable tableName="admissions_question_answers">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="${uuid_type}"/>
+            <column name="deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="int" defaultValueNumeric="0"/>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="${uuid_type}"/>
+            <column name="updated_on" type="datetime" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
     </changeSet>
 
     <changeSet author="pinnacl-team" id="ddl-0003-02-create-admissions-link-tables-and-foreign-keys">
@@ -86,6 +115,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="metadata_id"
                                  baseTableName="_link_admissions_and_metadata"
                                  constraintName="fk_admission_and_metadata"
@@ -95,9 +125,43 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="admissions_metadata"/>
+
         <addForeignKeyConstraint baseColumnNames="admission_id"
                                  baseTableName="_link_admissions_and_metadata"
                                  constraintName="fk_admissions_and_metadata"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="admissions"/>
+
+        <!-- _link_admissions_question_answers -->
+        <createTable tableName="_link_admissions_and_question_answers">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="admission_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question_answer_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="question_answer_id"
+                                 baseTableName="_link_admissions_and_question_answers"
+                                 constraintName="fk_admission_and_question_answers"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="admissions_question_answers"/>
+
+        <addForeignKeyConstraint baseColumnNames="admission_id"
+                                 baseTableName="_link_admissions_and_question_answers"
+                                 constraintName="fk_admissions_and_question_answer"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="RESTRICT"
@@ -117,6 +181,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="document_id"
                                  baseTableName="_link_admissions_and_documents"
                                  constraintName="fk_admission_and_documents"
@@ -126,6 +191,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="forms_documents"/>
+
         <addForeignKeyConstraint baseColumnNames="admission_id"
                                  baseTableName="_link_admissions_and_documents"
                                  constraintName="fk_admissions_and_document"

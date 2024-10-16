@@ -16,12 +16,14 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public record Admission(UUID id, @NotNull SchoolType type, @Valid School school, @NotBlank String name,
-                        Gender gender, @Valid Metadata metadata, @Valid Set<Document> documents, Status status,
-                        String applicationNumber, Boolean deleted,
-                        Integer revision, LocalDateTime createdOn, LocalDateTime updatedOn,
-                        UUID createdBy, UUID updatedBy, UUID ownerId, String hash)
-        implements Domain, Form {
+public record Admission(UUID id, @NotNull SchoolType type, @Valid School school,
+                        @NotBlank String name, Gender gender, @Valid Metadata metadata,
+                        @Valid Set<AdmissionQuestionAnswer> questionAnswers,
+                        @Valid Set<Document> documents, Status status, String applicationNumber,
+                        Boolean deleted, Integer revision, LocalDateTime createdOn,
+                        LocalDateTime updatedOn, UUID createdBy, UUID updatedBy, UUID ownerId,
+                        String hash)
+                       implements Domain, Form {
 
     @Override
     public FormKind kind() {

@@ -2,7 +2,6 @@ package io.pinnacl.academics.school.data.persistence;
 
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.commons.data.persistence.BaseEntity;
-import io.pinnacl.commons.features.traits.data.persistence.PinnaclTraitEntity;
 import io.pinnacl.commons.features.postaladdress.data.persistence.PostalAddressEntity;
 import io.pinnacl.commons.features.sociallinks.data.persistence.SocialLinkEntity;
 import io.vertx.core.json.JsonArray;
@@ -12,7 +11,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,10 +18,12 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(callSuper = true, exclude = {
-        "metadata", "tuitionFees", "terms", "features"
+        "metadata", "tuitionFees", "terms", "extraAdmissionQuestions", "supportingDocuments",
+        "extraContactPoints"
 })
 @EqualsAndHashCode(callSuper = true, exclude = {
-        "metadata", "tuitionFees", "terms", "features"
+        "metadata", "tuitionFees", "terms", "socialLinks", "extraAdmissionQuestions",
+        "supportingDocuments", "extraContactPoints"
 })
 @NoArgsConstructor
 @AllArgsConstructor
@@ -62,6 +62,14 @@ public class SchoolEntity extends BaseEntity {
     @Column(name = "extra_contact_points", columnDefinition = "jsonb")
     private JsonArray extraContactPoints;
 
+    @Type(io.pinnacl.commons.data.persistence.JsonBArray.class)
+    @Column(name = "extra_admission_questions", columnDefinition = "jsonb")
+    private JsonArray extraAdmissionQuestions;
+
+    @Type(io.pinnacl.commons.data.persistence.JsonBArray.class)
+    @Column(name = "supporting_documents", columnDefinition = "jsonb")
+    private JsonArray supportingDocuments;
+
     @OneToOne(targetEntity = PostalAddressEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     })
@@ -98,13 +106,6 @@ public class SchoolEntity extends BaseEntity {
     @JoinTable(name = "_link_schools_and_terms", joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "term_id"))
     private Set<TermEntity> terms;
-
-    // @OneToMany(targetEntity = PinnaclTraitEntity.class, orphanRemoval = true,
-    // fetch = FetchType.LAZY)
-    // @JoinTable(name = "_link_schools_and_pinnacl_traits",
-    // joinColumns = @JoinColumn(name = "school_id"),
-    // inverseJoinColumns = @JoinColumn(name = "trait_id"))
-    // private Set<PinnaclTraitEntity> traits;
 
 
 }

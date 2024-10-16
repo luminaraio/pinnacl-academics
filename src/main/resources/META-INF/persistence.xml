@@ -18,6 +18,7 @@
         <class>io.pinnacl.academics.school.data.persistence.SchoolMetadataEntity</class>
         <class>io.pinnacl.academics.school.data.persistence.SchoolEntity</class>
 
+        <class>io.pinnacl.academics.admissions.data.persistence.AdmissionQuestionAnswerEntity</class>
         <class>io.pinnacl.academics.admissions.data.persistence.AdmissionMetadataEntity</class>
         <class>io.pinnacl.academics.admissions.data.persistence.AdmissionEntity</class>
 

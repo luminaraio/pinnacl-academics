@@ -6,6 +6,10 @@ import io.pinnacl.academics.admissions.data.Gender;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.academics.school.data.domain.metadata.*;
 import io.pinnacl.commons.data.domain.Domain;
+import io.pinnacl.commons.features.forms.data.domain.Question;
+
+import java.util.Map;
+import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -31,5 +35,9 @@ public sealed interface Metadata extends Domain permits GenericSchoolAdmission, 
 
     default String alternateName() {
         return null;
+    }
+
+    default Set<Question> extraQuestions() {
+        return Set.of();
     }
 }

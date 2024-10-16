@@ -112,6 +112,8 @@
             <column name="website" type="jsonb"/>
             <column name="contact_point" type="jsonb"/>
             <column name="extra_contact_points" type="jsonb"/>
+            <column name="extra_admission_questions" type="jsonb"/>
+            <column name="supporting_documents" type="jsonb"/>
             <column name="owner_id" type="${uuid_type}"/>
             <column name="deleted" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -141,6 +143,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="trait_id"
                                  baseTableName="_link_schools_and_pinnacl_traits"
                                  constraintName="fk_school_and_traits"
@@ -150,6 +153,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="pinnacl_traits"/>
+
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_pinnacl_traits"
                                  constraintName="fk_schools_and_trait"
@@ -172,6 +176,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="address_id"
                                  baseTableName="_link_schools_and_addresses"
                                  constraintName="fk_school_and_postal_addresses"
@@ -181,6 +186,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="postal_addresses"/>
+
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_addresses"
                                  constraintName="fk_schools_and_postal_address"
@@ -203,6 +209,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="social_link_id"
                                  baseTableName="_link_schools_and_social_links"
                                  constraintName="fk_school_and_social_links"
@@ -212,6 +219,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="social_links"/>
+
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_social_links"
                                  constraintName="fk_schools_and_social_link"
@@ -234,6 +242,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="metadata_id"
                                  baseTableName="_link_schools_and_metadata"
                                  constraintName="fk_school_and_metadata"
@@ -243,6 +252,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="schools_metadata"/>
+
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_metadata"
                                  constraintName="fk_schools_and_metadata"
@@ -265,6 +275,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="tuition_fee_id"
                                  baseTableName="_link_schools_and_tuition_fees"
                                  constraintName="fk_school_and_tuition_fees"
@@ -274,6 +285,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="tuition_fees"/>
+
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_tuition_fees"
                                  constraintName="fk_schools_and_tuition_fee"
@@ -296,6 +308,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <addForeignKeyConstraint baseColumnNames="term_id"
                                  baseTableName="_link_schools_and_terms"
                                  constraintName="fk_school_and_terms"
@@ -305,6 +318,7 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="terms"/>
+
         <addForeignKeyConstraint baseColumnNames="school_id"
                                  baseTableName="_link_schools_and_terms"
                                  constraintName="fk_schools_and_term"

@@ -50,8 +50,8 @@ public class AdmissionsValidator extends BaseDomainValidator<Admission>
     }
 
     private Future<Metadata> doValidation(AuthUser authUser, GenericSchoolAdmission admission) {
-        if (Objects.isNull(admission.guardianTelephone()) || Objects.isNull(admission.gender())
-                || Objects.isNull(admission.dateOfBirth()) || Objects.isNull(admission.name())) {
+        if (Objects.isNull(admission.guardianTelephone()) || Objects.isNull(admission.dateOfBirth())
+                || Objects.isNull(admission.name())) {
             return Future.failedFuture(Problems.PAYLOAD_VALIDATION_ERROR
                     .withProblemError("missingAttribute",
                             "guardianTelephone, dateOfBirth, name or gender must be provided")

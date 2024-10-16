@@ -20,7 +20,8 @@ import java.util.List;
  * @author Luminara Team
  */
 @Mapper(uses = {
-        DocumentMapper.class, AdmissionMetadataMapper.class, SchoolMapper.class
+        DocumentMapper.class, AdmissionMetadataMapper.class, SchoolMapper.class,
+        AdmissionQuestionAnswerMapper.class
 })
 public interface AdmissionMapper extends
                                  io.pinnacl.commons.data.mapper.Mapper<Admission, AdmissionEntity> {
