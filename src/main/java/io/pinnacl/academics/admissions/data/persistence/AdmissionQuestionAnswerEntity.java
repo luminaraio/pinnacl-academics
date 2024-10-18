@@ -27,6 +27,6 @@ public class AdmissionQuestionAnswerEntity extends BaseEntity {
     private String name;
 
     @Type(io.pinnacl.commons.data.persistence.JsonBArray.class)
-    @Column(name = "answer", columnDefinition = "jsonb")
-    private JsonArray answer;
+    @Column(name = "answers", columnDefinition = "jsonb")
+    private JsonArray answers;
 }

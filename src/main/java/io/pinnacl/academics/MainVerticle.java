@@ -1,5 +1,10 @@
 package io.pinnacl.academics;
 
+import io.pinnacl.academics.admissions.AdmissionsService;
+import io.pinnacl.academics.admissions.AdmissionsValidator;
+import io.pinnacl.academics.admissions.AdmissionsVerticle;
+import io.pinnacl.academics.admissions.mapper.AdmissionMapper;
+import io.pinnacl.academics.admissions.repository.AdmissionRepository;
 import io.pinnacl.academics.school.SchoolService;
 import io.pinnacl.academics.school.SchoolValidator;
 import io.pinnacl.academics.school.SchoolVerticle;
@@ -39,7 +44,7 @@ public final class MainVerticle extends AbstractMainVerticle {
 
     @Override
     public Set<String> features() {
-        return Set.of("school");
+        return Set.of("schools", "admissions");
     }
 
     @Override
@@ -59,18 +64,26 @@ public final class MainVerticle extends AbstractMainVerticle {
         var deploymentOptions = new DeploymentOptions().setConfig(config);
         var dbHealthService = DbHealthService.fromSessionFactory(sessionFactory);
 
+        var schoolsConfig = verticleConfigs.get("schools");
         var schoolRepository = SchoolRepository.create(sessionFactory);
-        var schoolService = SchoolService.create(SchoolMapper.INSTANCE, schoolRepository,
+        var schoolsService = SchoolService.create(SchoolMapper.INSTANCE, schoolRepository,
                 SchoolValidator.create());
+
+        var admissionsConfig = verticleConfigs.get("admissions");
+        var admissionRepository = AdmissionRepository.create(sessionFactory);
+        var admissionsService = AdmissionsService.create(vertx, discovery(),
+                AdmissionMapper.INSTANCE, admissionRepository, AdmissionsValidator.create());
 
         var serviceDetailsVerticle = ServiceDetailsVerticle.create(vertx, discovery(), config,
                 verticleConfigs.get("service"), "academics", dbHealthService);
 
-        var schoolVerticle =
-                SchoolVerticle.create(discovery(), verticleConfigs.get("school"), schoolService);
+        var schoolVerticle = SchoolVerticle.create(discovery(), schoolsConfig, schoolsService);
 
+        var admissionsVerticle =
+                AdmissionsVerticle.create(discovery(), admissionsConfig, admissionsService);
 
         return Future.all(List.of(vertx.deployVerticle(serviceDetailsVerticle, deploymentOptions),
-                vertx.deployVerticle(schoolVerticle, deploymentOptions))).mapEmpty();
+                vertx.deployVerticle(schoolVerticle, deploymentOptions),
+                vertx.deployVerticle(admissionsVerticle, deploymentOptions))).mapEmpty();
     }
 }

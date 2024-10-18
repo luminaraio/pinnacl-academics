@@ -9,18 +9,17 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import org.hibernate.reactive.mutiny.Mutiny;
 
-public class ApplicationRepository extends BaseJpaRepository<AdmissionEntity>
-                                   implements RetrievalBy<AdmissionEntity>,
-                                   UniqueConstraints<AdmissionEntity> {
+public class AdmissionRepository extends BaseJpaRepository<AdmissionEntity> implements
+                                 RetrievalBy<AdmissionEntity>, UniqueConstraints<AdmissionEntity> {
 
 
-    protected ApplicationRepository(Class<AdmissionEntity> clazz,
-                                    Mutiny.SessionFactory sessionFactory) {
+    protected AdmissionRepository(Class<AdmissionEntity> clazz,
+                                  Mutiny.SessionFactory sessionFactory) {
         super(clazz, sessionFactory);
     }
 
-    public static ApplicationRepository create(Mutiny.SessionFactory sessionFactory) {
-        return new ApplicationRepository(AdmissionEntity.class, sessionFactory);
+    public static AdmissionRepository create(Mutiny.SessionFactory sessionFactory) {
+        return new AdmissionRepository(AdmissionEntity.class, sessionFactory);
     }
 
     public Future<Long> countApplication(AuthUser authUser, String className) {

@@ -55,7 +55,7 @@
             <column name="name" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="answer" type="jsonb">
+            <column name="answers" type="jsonb">
                 <constraints nullable="false"/>
             </column>
             <column name="owner_id" type="${uuid_type}"/>

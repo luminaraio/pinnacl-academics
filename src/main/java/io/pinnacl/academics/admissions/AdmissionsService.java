@@ -50,7 +50,7 @@ public class AdmissionsService extends DefaultRecordService<Admission, Admission
     @Override
     public Future<Admission> create(AuthUser authUser, Admission domain) {
         return Future.failedFuture(Problems.NOT_IMPLEMENTED_ERROR.toException());
-        // return ((ApplicationRepository) repository())
+        // return ((AdmissionRepository) repository())
         // .retrieveByAnd(authUser, GUARDIAN_EMAIL, features.guardianEmail(), STUDENT_NAME,
         // features.name())
         // .flatMap(apps -> {
@@ -60,7 +60,7 @@ public class AdmissionsService extends DefaultRecordService<Admission, Admission
         // "The pair application.guardianEmail and application.name already exists")
         // .toException());
         // }
-        // return ((ApplicationRepository) repository())
+        // return ((AdmissionRepository) repository())
         // .countApplication(authUser, features.className())
         // .flatMap(count -> super.create(authUser,
         // features.withApplicationNumber(count)).flatMap(application -> {

@@ -1,6 +1,7 @@
 package io.pinnacl.academics.school.mapper;
 
 import io.pinnacl.academics.school.data.domain.School;
+import io.pinnacl.academics.school.data.domain.SchoolQuestion;
 import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import io.pinnacl.commons.data.domain.base.ContactPoint;
 import io.pinnacl.commons.data.domain.base.ImageObject;
@@ -104,9 +105,9 @@ public interface SchoolMapper extends io.pinnacl.commons.data.mapper.Mapper<Scho
         return JsonMapper.toJArray(questions);
     }
 
-    static Set<Question> fromEntityAdmissionQuestions(SchoolEntity entity) {
-        return Set
-                .copyOf(JsonMapper.fromJArray(entity.getExtraAdmissionQuestions(), Question.class));
+    static Set<SchoolQuestion> fromEntityAdmissionQuestions(SchoolEntity entity) {
+        return Set.copyOf(
+                JsonMapper.fromJArray(entity.getExtraAdmissionQuestions(), SchoolQuestion.class));
     }
 
     static JsonArray fromDomainSupportingDocuments(School domain) {

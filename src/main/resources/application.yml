@@ -51,7 +51,7 @@ features:
         - name: academicsHealthReady
           broadcastable: false
 
-    school:
+    schools:
       address: schools
       identifier: id
       messageTypes:

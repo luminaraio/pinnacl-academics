@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public record AdmissionQuestionAnswer<T>(UUID id, @NotNull Type type, @NotBlank String name,
                                          String description, boolean required,
-                                         @NotNull @NotEmpty Set<T> answer, Boolean deleted,
+                                         @NotNull @NotEmpty Set<T> answers, Boolean deleted,
                                          Integer revision, LocalDateTime createdOn,
                                          LocalDateTime updatedOn, UUID createdBy, UUID updatedBy,
                                          UUID ownerId, String hash)

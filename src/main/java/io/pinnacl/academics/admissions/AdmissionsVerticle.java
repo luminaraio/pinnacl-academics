@@ -34,11 +34,11 @@ public class AdmissionsVerticle extends ValidatedResourceVerticle<Admission, Adm
 
     @Override
     public void start(Promise<Void> promise) throws Exception {
-        var handlers = List.of(addMessageHandler("retrieveApplications", this::fetchHandler),
-                addMessageHandler("retrieveApplication", this::fetchByIdHandler),
-                addMessageHandler("createApplication", this::createHandler),
-                addMessageHandler("updateApplication", this::updateHandler),
-                addMessageHandler("archiveApplication", this::deleteByIdHandler));
+        var handlers = List.of(addMessageHandler("createAcademicAdmission", this::createHandler),
+                addMessageHandler("updateAcademicAdmission", this::updateHandler),
+                addMessageHandler("retrieveAcademicAdmissions", this::fetchHandler),
+                addMessageHandler("retrieveAcademicAdmission", this::fetchByIdHandler),
+                addMessageHandler("archiveAcademicAdmission", this::deleteByIdHandler));
 
         Future.all(handlers).onSuccess(_ -> {
             try {
