@@ -14,6 +14,10 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.servicediscovery.ServiceDiscovery;
 
+import java.util.Locale;
+import java.util.Objects;
+import java.util.UUID;
+
 public class AdmissionsService extends DefaultRecordService<Admission, AdmissionEntity>
                                implements MessageService {
 
@@ -48,8 +52,13 @@ public class AdmissionsService extends DefaultRecordService<Admission, Admission
     }
 
     @Override
-    public Future<Admission> create(AuthUser authUser, Admission domain) {
-        return Future.failedFuture(Problems.NOT_IMPLEMENTED_ERROR.toException());
+    public Future<Admission> onCreate(AuthUser authUser, Admission domain) {
+        logMethodEntry("AdmissionsService.onCreate");
+        var applicationNumber = generateApplicationNumber(domain);
+        var asDraft = domain.draft(applicationNumber);
+        return Future.succeededFuture(asDraft);
+
+
         // return ((AdmissionRepository) repository())
         // .retrieveByAnd(authUser, GUARDIAN_EMAIL, features.guardianEmail(), STUDENT_NAME,
         // features.name())
@@ -73,6 +82,28 @@ public class AdmissionsService extends DefaultRecordService<Admission, Admission
         // return Future.succeededFuture(application);
         // }));
         // });
+    }
+
+    @Override
+    public Future<Admission> onPostCreate(AuthUser authUser, Admission persisted) {
+        logMethodEntry("AdmissionsService.onPostCreate");
+        return super.onPostCreate(authUser, persisted).onSuccess(this::onCreatePostProcessing);
+    }
+
+    private String generateApplicationNumber(Admission admission) {
+        logMethodEntry("AdmissionsService.generateApplicationNumber");
+        if (Objects.nonNull(admission.transientSchool())) {
+            var prefix = admission.transientSchool().metadata().applicationNumberPrefix();
+            // TODO: We need to change the scheme. Need to check that the 'key' matches our agreed
+            // scheme
+            String key = UUID.randomUUID().toString().split("-")[4];
+            return "%s%s".formatted(prefix, key).toUpperCase(Locale.ROOT);
+        }
+        return null;
+    }
+
+    private void onCreatePostProcessing(Admission admission) {
+        logMethodEntry("AdmissionsService.onCreatePostProcessing");
     }
 
     @Override

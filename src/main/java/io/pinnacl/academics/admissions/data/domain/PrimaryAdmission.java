@@ -8,9 +8,14 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-public record PrimaryAdmission(UUID id, @NotNull SchoolType type, Map<String, Object> extraMetadata,
+public record PrimaryAdmission(UUID id, SchoolType type, Map<String, Object> extraMetadata,
                                Boolean deleted, Integer revision, LocalDateTime createdOn,
                                LocalDateTime updatedOn, UUID createdBy, UUID updatedBy,
                                UUID ownerId, String hash)
                               implements Metadata {
+
+    @Override
+    public SchoolType type() {
+        return SchoolType.PRIMARY;
+    }
 }

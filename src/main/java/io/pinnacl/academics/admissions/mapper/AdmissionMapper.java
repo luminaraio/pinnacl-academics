@@ -1,17 +1,17 @@
 package io.pinnacl.academics.admissions.mapper;
 
 import io.pinnacl.academics.admissions.data.domain.Admission;
+import io.pinnacl.academics.admissions.data.domain.School;
 import io.pinnacl.academics.admissions.data.persistence.AdmissionEntity;
-import io.pinnacl.academics.school.data.domain.metadata.Metadata;
-import io.pinnacl.academics.school.mapper.SchoolMapper;
+import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import io.pinnacl.commons.features.forms.mapper.DocumentMapper;
-import io.vertx.core.json.JsonObject;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -20,17 +20,18 @@ import java.util.List;
  * @author Luminara Team
  */
 @Mapper(uses = {
-        DocumentMapper.class, AdmissionMetadataMapper.class, SchoolMapper.class,
-        AdmissionQuestionAnswerMapper.class
+        DocumentMapper.class, AdmissionMetadataMapper.class, AdmissionQuestionAnswerMapper.class
 })
 public interface AdmissionMapper extends
                                  io.pinnacl.commons.data.mapper.Mapper<Admission, AdmissionEntity> {
     AdmissionMapper INSTANCE = Mappers.getMapper(AdmissionMapper.class);
 
     @Mapping(source = "version", target = "revision")
+    @Mapping(target = "school", expression = "java( AdmissionMapper.asSchoolDomain(entity) )")
     Admission asDomainObject(AdmissionEntity entity);
 
     @InheritInverseConfiguration
+    @Mapping(target = "school", expression = "java( AdmissionMapper.asSchoolEntity(domain) )")
     AdmissionEntity asEntity(Admission domain);
 
     @Override
@@ -39,26 +40,18 @@ public interface AdmissionMapper extends
     @Override
     List<AdmissionEntity> asEntities(List<Admission> list);
 
-    static JsonObject asData(Metadata domainObject) {
-        return JsonObject.mapFrom(domainObject);
+    static School asSchoolDomain(AdmissionEntity entity) {
+        if (Objects.nonNull(entity.getSchool())) {
+            var school = entity.getSchool();
+            return new School(school.id(), school.getName());
+        }
+        return null;
     }
 
-    // static JsonObject fromDocuments(Admission domainObject) {
-    // return JsonMapper.toJsonObject(domainObject.documents());
-    // }
-
-    // static Documents toDocuments(AdmissionEntity entity) {
-    // var documents = entity.getDocuments();
-    //
-    // if (Objects.nonNull(documents)) {
-    // var fieldNames = documents.fieldNames();
-    // var documentsDomain = new JsonObject();
-    // for (var field : fieldNames) {
-    // documentsDomain.put(field, JsonMapper.fromJsonObject(
-    // JsonMapper.toJsonObject(documents.getValue(field)), ImageObject.class));
-    // }
-    // return JsonMapper.fromJson(documentsDomain, Documents.class).result();
-    // }
-    // return null;
-    // }
+    static SchoolEntity asSchoolEntity(Admission domain) {
+        if (Objects.nonNull(domain.school())) {
+            return SchoolEntity.builder().id(domain.school().id()).build();
+        }
+        return null;
+    }
 }

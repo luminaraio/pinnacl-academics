@@ -1,5 +1,6 @@
 package io.pinnacl.academics.admissions.data.persistence;
 
+import io.pinnacl.academics.admissions.data.Gender;
 import io.pinnacl.academics.admissions.data.Status;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.academics.school.data.persistence.SchoolEntity;
@@ -27,17 +28,24 @@ import java.util.List;
 public class AdmissionEntity extends BaseEntity {
 
     @ManyToOne(targetEntity = SchoolEntity.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "_link_schools_and_admission", joinColumns = @JoinColumn(name = "school_id"),
+    @JoinTable(name = "_link_schools_and_admissions", joinColumns = @JoinColumn(name = "school_id"),
             inverseJoinColumns = @JoinColumn(name = "admission_id"))
     private SchoolEntity school;
 
+    @Column
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column
-    private SchoolType type;
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     @Column
     private Status status;
+
+    @Column(name = "application_number")
+    private String applicationNumber;
+
 
     @OneToOne(targetEntity = AdmissionMetadataEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE

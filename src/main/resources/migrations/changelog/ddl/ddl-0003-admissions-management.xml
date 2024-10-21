@@ -23,9 +23,6 @@
             <column name="type" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="gender" type="text">
-                <constraints nullable="false"/>
-            </column>
             <column name="data" type="jsonb">
                 <constraints nullable="false"/>
             </column>
@@ -44,16 +41,9 @@
             </column>
         </createTable>
 
-
         <createTable tableName="admissions_question_answers">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="type" type="text">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="text">
-                <constraints nullable="false"/>
             </column>
             <column name="answers" type="jsonb">
                 <constraints nullable="false"/>
@@ -81,12 +71,14 @@
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="type" type="text">
+            <column name="name" type="text">
                 <constraints nullable="false"/>
             </column>
+            <column name="application_number" type="text"/>
             <column name="status" type="text">
                 <constraints nullable="false"/>
             </column>
+            <column name="gender" type="text"/>
             <column name="owner_id" type="${uuid_type}"/>
             <column name="deleted" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
@@ -195,6 +187,39 @@
         <addForeignKeyConstraint baseColumnNames="admission_id"
                                  baseTableName="_link_admissions_and_documents"
                                  constraintName="fk_admissions_and_document"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="admissions"/>
+
+        <!-- _link_schools_and_admissions -->
+        <createTable tableName="_link_schools_and_admissions">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="school_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="admission_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="school_id"
+                                 baseTableName="_link_schools_and_admissions"
+                                 constraintName="fk_schools_and_admission"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="schools"/>
+
+        <addForeignKeyConstraint baseColumnNames="admission_id"
+                                 baseTableName="_link_schools_and_admissions"
+                                 constraintName="fk_school_and_admissions"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  onDelete="RESTRICT"

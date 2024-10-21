@@ -34,6 +34,7 @@ public interface AdmissionMetadataMapper extends
 
     @InheritInverseConfiguration
     @Mapping(target = "data", expression = "java( AdmissionMetadataMapper.asData(domain) )")
+    @Mapping(target = "type", expression = "java( domain.type() )")
     AdmissionMetadataEntity asEntity(Metadata domain);
 
     @Override

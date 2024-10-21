@@ -73,6 +73,9 @@
             </column>
             <column name="principal_name" type="text"/>
             <column name="number_of_students" type="int" defaultValueNumeric="0"/>
+            <column name="application_number_prefix" type="text">
+                <constraints nullable="false"/>
+            </column>
             <column name="data" type="jsonb">
                 <constraints nullable="false"/>
             </column>

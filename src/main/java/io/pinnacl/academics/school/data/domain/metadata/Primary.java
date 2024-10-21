@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record Primary(UUID id, SchoolType type, String principalName, Integer numberOfStudents,
-                      Boolean deleted, Integer revision, LocalDateTime createdOn,
-                      LocalDateTime updatedOn, UUID createdBy, UUID updatedBy, UUID ownerId,
-                      String hash)
+                      String applicationNumberPrefix, Boolean deleted, Integer revision,
+                      LocalDateTime createdOn, LocalDateTime updatedOn, UUID createdBy,
+                      UUID updatedBy, UUID ownerId, String hash)
                      implements Metadata {
 
     @Override

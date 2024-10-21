@@ -24,7 +24,7 @@ import java.util.UUID;
 
 public record School(UUID id, @NotBlank String name, String description, @NotNull SchoolType type,
                      @Valid List<TuitionFee> tuitionFees, @Valid List<Term> terms,
-                     @Valid Metadata metadata, String alternateName,
+                     @NotNull @Valid Metadata metadata, String alternateName,
                      @NotNull @Valid ContactPoint contactPoint, @NotNull PostalAddress address,
                      ImageObject logo, @Valid List<SocialLink> socialLinks, @Valid URL website,
                      Integer numberOfEmployees, @Valid Set<SchoolQuestion> extraAdmissionQuestions,
@@ -57,5 +57,13 @@ public record School(UUID id, @NotBlank String name, String description, @NotNul
     @Override
     public <T extends Brand> T brand() {
         return null;
+    }
+
+    public School applicationNumberPrefix(String string) {
+        return new School(id, name, description, type, tuitionFees, terms,
+                metadata.withApplicationNumberPrefix(string), alternateName, contactPoint, address,
+                logo, socialLinks, website, numberOfEmployees, extraAdmissionQuestions,
+                supportingDocuments, extraContactPoints, features, deleted, revision, createdOn,
+                updatedOn, createdBy, updatedBy, ownerId, hash);
     }
 }

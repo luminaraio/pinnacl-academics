@@ -25,10 +25,6 @@ public class AdmissionMetadataEntity extends BaseEntity {
     @Column
     private SchoolType type;
 
-    @Enumerated(EnumType.STRING)
-    @Column
-    private Gender gender;
-
     @Type(io.pinnacl.commons.data.persistence.JsonB.class)
     @Column(name = "data", columnDefinition = "jsonb")
     private JsonObject data;

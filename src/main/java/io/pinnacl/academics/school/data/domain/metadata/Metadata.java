@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.commons.data.domain.Domain;
-import io.pinnacl.commons.features.forms.data.domain.Question;
-import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
-
-import java.util.Set;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -27,6 +25,8 @@ public sealed interface Metadata extends Domain
 
     Integer numberOfStudents();
 
+    String applicationNumberPrefix();
+
     default String name() {
         return null;
     }
@@ -37,5 +37,9 @@ public sealed interface Metadata extends Domain
 
     default String alternateName() {
         return null;
+    }
+
+    default Metadata withApplicationNumberPrefix(String string) {
+        return this;
     }
 }

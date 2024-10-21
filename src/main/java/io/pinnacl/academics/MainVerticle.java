@@ -71,8 +71,9 @@ public final class MainVerticle extends AbstractMainVerticle {
 
         var admissionsConfig = verticleConfigs.get("admissions");
         var admissionRepository = AdmissionRepository.create(sessionFactory);
-        var admissionsService = AdmissionsService.create(vertx, discovery(),
-                AdmissionMapper.INSTANCE, admissionRepository, AdmissionsValidator.create());
+        var admissionsService =
+                AdmissionsService.create(vertx, discovery(), AdmissionMapper.INSTANCE,
+                        admissionRepository, AdmissionsValidator.create(schoolsService));
 
         var serviceDetailsVerticle = ServiceDetailsVerticle.create(vertx, discovery(), config,
                 verticleConfigs.get("service"), "academics", dbHealthService);

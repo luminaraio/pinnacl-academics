@@ -29,6 +29,9 @@ public class SchoolMetadataEntity extends BaseEntity {
     @Column(name = "number_of_students")
     private Integer numberOfStudents;
 
+    @Column(name = "application_number_prefix")
+    private String applicationNumberPrefix;
+
     @Type(io.pinnacl.commons.data.persistence.JsonB.class)
     @Column(name = "data", columnDefinition = "jsonb")
     private JsonObject data;

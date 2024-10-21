@@ -2,7 +2,8 @@ package io.pinnacl.academics.admissions.data;
 
 public enum Status {
     DRAFT,
-    PENDING,
+    SUBMITTED,
+    IN_PROGRESS,
     ADMITTED,
     REJECTED;
 }
