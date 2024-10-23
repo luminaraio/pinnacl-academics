@@ -39,6 +39,13 @@ storage:
       changelogPath: migrations/changelog/db.changelog-dev.xml
 
 
+academics:
+  admissions:
+    applicationNumberPrefixLength: 4
+    applicationNumberPostfixLength: 8
+
+
+
 features:
   verticles:
     service:
@@ -60,6 +67,7 @@ features:
         - name: retrieveSchool
         - name: retrieveSchools
         - name: archiveSchool
+        - name: retrieveSchoolAdmissions
 #        - name: retrieveApplicationsAnalytics
 
     admissions:
@@ -71,10 +79,7 @@ features:
         - name: retrieveAcademicAdmissions
         - name: retrieveAcademicAdmission
         - name: archiveAcademicAdmission
-      config:
-        applicationNumberPrefixLength: 4
-        applicationNumberPostfixLength: 8
-
+        - name: submitAcademicAdmission
 #      config:
 #        templates:
 #          applicationConfirmation:

@@ -11,25 +11,27 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "admissions")
 @Getter
 @Setter
 @ToString(callSuper = true, exclude = {
-        "school", "metadata", "documents"
+        "school", "metadata", "documents", "questionAnswers"
 })
 @EqualsAndHashCode(callSuper = true, exclude = {
-        "school", "metadata", "documents"
+        "school", "metadata", "documents", "questionAnswers"
 })
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class AdmissionEntity extends BaseEntity {
 
-    @ManyToOne(targetEntity = SchoolEntity.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "_link_schools_and_admissions", joinColumns = @JoinColumn(name = "school_id"),
-            inverseJoinColumns = @JoinColumn(name = "admission_id"))
+    @ManyToOne(targetEntity = SchoolEntity.class)
+    @JoinTable(name = "_link_schools_and_admissions",
+            joinColumns = @JoinColumn(name = "admission_id"),
+            inverseJoinColumns = @JoinColumn(name = "school_id"))
     private SchoolEntity school;
 
     @Column
@@ -55,19 +57,19 @@ public class AdmissionEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "metadata_id"))
     private AdmissionMetadataEntity metadata;
 
-    @OneToMany(targetEntity = DocumentEntity.class, cascade = {
-            CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
-    }, fetch = FetchType.LAZY)
-    @JoinTable(name = "_link_admissions_and_documents",
-            joinColumns = @JoinColumn(name = "admission_id"),
-            inverseJoinColumns = @JoinColumn(name = "document_id"))
-    private List<DocumentEntity> documents;
-
     @OneToMany(targetEntity = AdmissionQuestionAnswerEntity.class, cascade = {
-            CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE
+            CascadeType.PERSIST, CascadeType.MERGE
     }, fetch = FetchType.LAZY)
     @JoinTable(name = "_link_admissions_and_question_answers",
             joinColumns = @JoinColumn(name = "admission_id"),
             inverseJoinColumns = @JoinColumn(name = "question_answer_id"))
-    private List<AdmissionQuestionAnswerEntity> questionAnswers;
+    private Set<AdmissionQuestionAnswerEntity> questionAnswers;
+
+    @OneToMany(targetEntity = DocumentEntity.class, cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE
+    }, fetch = FetchType.LAZY)
+    @JoinTable(name = "_link_admissions_and_documents",
+            joinColumns = @JoinColumn(name = "admission_id"),
+            inverseJoinColumns = @JoinColumn(name = "document_id"))
+    private Set<DocumentEntity> documents;
 }

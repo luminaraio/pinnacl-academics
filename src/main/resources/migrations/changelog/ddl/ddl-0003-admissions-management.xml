@@ -45,6 +45,12 @@
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="text">
+                <constraints nullable="false"/>
+            </column>
             <column name="answers" type="jsonb">
                 <constraints nullable="false"/>
             </column>

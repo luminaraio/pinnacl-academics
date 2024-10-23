@@ -1,5 +1,6 @@
 package io.pinnacl.academics.school.data.domain;
 
+import io.pinnacl.academics.data.domain.AdmissionsConfig;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.academics.school.data.domain.metadata.Metadata;
 import io.pinnacl.commons.data.domain.Brand;
@@ -44,7 +45,6 @@ public record School(UUID id, @NotBlank String name, String description, @NotNul
         return Objects.nonNull(contactPoint) ? contactPoint.email() : null;
     }
 
-
     public String telephone() {
         return Objects.nonNull(contactPoint) ? contactPoint.telephone() : null;
     }
@@ -59,10 +59,10 @@ public record School(UUID id, @NotBlank String name, String description, @NotNul
         return null;
     }
 
-    public School applicationNumberPrefix(String string) {
+    public School admissionsConfig(AdmissionsConfig admissionsConfig) {
         return new School(id, name, description, type, tuitionFees, terms,
-                metadata.withApplicationNumberPrefix(string), alternateName, contactPoint, address,
-                logo, socialLinks, website, numberOfEmployees, extraAdmissionQuestions,
+                metadata.withAdmissionsConfig(admissionsConfig), alternateName, contactPoint,
+                address, logo, socialLinks, website, numberOfEmployees, extraAdmissionQuestions,
                 supportingDocuments, extraContactPoints, features, deleted, revision, createdOn,
                 updatedOn, createdBy, updatedBy, ownerId, hash);
     }

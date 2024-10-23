@@ -2,10 +2,9 @@ package io.pinnacl.academics.school.data.domain.metadata;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.pinnacl.academics.data.domain.AdmissionsConfig;
 import io.pinnacl.academics.school.data.SchoolType;
 import io.pinnacl.commons.data.domain.Domain;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -25,7 +24,7 @@ public sealed interface Metadata extends Domain
 
     Integer numberOfStudents();
 
-    String applicationNumberPrefix();
+    AdmissionsConfig admissionsConfig();
 
     default String name() {
         return null;
@@ -39,7 +38,7 @@ public sealed interface Metadata extends Domain
         return null;
     }
 
-    default Metadata withApplicationNumberPrefix(String string) {
+    default Metadata withAdmissionsConfig(AdmissionsConfig admissionsConfig) {
         return this;
     }
 }

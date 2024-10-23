@@ -100,7 +100,7 @@
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="assetId" type="${uuid_type}">
+            <column name="asset_id" type="${uuid_type}">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="text">

@@ -3,7 +3,7 @@ package io.pinnacl.academics;
 import io.pinnacl.academics.admissions.AdmissionsService;
 import io.pinnacl.academics.admissions.AdmissionsValidator;
 import io.pinnacl.academics.admissions.AdmissionsVerticle;
-import io.pinnacl.academics.admissions.data.config.AdmissionsConfig;
+import io.pinnacl.academics.data.domain.AdmissionsConfig;
 import io.pinnacl.academics.admissions.mapper.AdmissionMapper;
 import io.pinnacl.academics.admissions.repository.AdmissionRepository;
 import io.pinnacl.academics.school.SchoolService;
@@ -11,6 +11,7 @@ import io.pinnacl.academics.school.SchoolValidator;
 import io.pinnacl.academics.school.SchoolVerticle;
 import io.pinnacl.academics.school.mapper.SchoolMapper;
 import io.pinnacl.academics.school.repository.SchoolRepository;
+import io.pinnacl.commons.Jsons;
 import io.pinnacl.commons.config.Config;
 import io.pinnacl.commons.config.VerticleConfig;
 import io.pinnacl.commons.data.mapper.JsonMapper;
@@ -64,17 +65,20 @@ public final class MainVerticle extends AbstractMainVerticle {
         var deploymentOptions = new DeploymentOptions().setConfig(config);
         var dbHealthService = DbHealthService.fromSessionFactory(sessionFactory);
 
-        var schoolsConfig = verticleConfigs.get("schools");
-        var schoolRepository = SchoolRepository.create(sessionFactory);
-        var schoolsService = SchoolService.create(SchoolMapper.INSTANCE, schoolRepository,
-                SchoolValidator.create());
+        var defaultAdmissionConfig = Jsons.valueJsonObject(config, "academics.admissions")
+                .map(admissionConfig -> admissionConfig.mapTo(AdmissionsConfig.class))
+                .orElseGet(AdmissionsConfig::pinnaclDefaults);
 
         var admissionsConfig = verticleConfigs.get("admissions");
         var admissionRepository = AdmissionRepository.create(sessionFactory);
         var admissionsService = AdmissionsService.create(vertx, discovery(),
-                AdmissionMapper.INSTANCE, admissionRepository, AdmissionsValidator.create(),
-                schoolsService,
-                JsonMapper.fromJsonObject(admissionsConfig.config(), AdmissionsConfig.class));
+                AdmissionMapper.INSTANCE, admissionRepository,
+                AdmissionsValidator.create(admissionRepository), defaultAdmissionConfig);
+
+        var schoolsConfig = verticleConfigs.get("schools");
+        var schoolRepository = SchoolRepository.create(sessionFactory);
+        var schoolsService = SchoolService.create(SchoolMapper.INSTANCE, schoolRepository,
+                SchoolValidator.create(), defaultAdmissionConfig, admissionsService);
 
         var serviceDetailsVerticle = ServiceDetailsVerticle.create(vertx, discovery(), config,
                 verticleConfigs.get("service"), "academics", dbHealthService);

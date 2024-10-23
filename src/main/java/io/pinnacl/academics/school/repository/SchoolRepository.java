@@ -6,6 +6,7 @@ import io.pinnacl.commons.repository.UniqueConstraints;
 import io.pinnacl.academics.school.data.persistence.SchoolEntity;
 import org.hibernate.reactive.mutiny.Mutiny;
 
+import java.util.Collection;
 import java.util.List;
 
 public class SchoolRepository extends BaseJpaRepository<SchoolEntity> implements

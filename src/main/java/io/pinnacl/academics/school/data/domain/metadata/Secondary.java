@@ -1,12 +1,14 @@
 package io.pinnacl.academics.school.data.domain.metadata;
 
+import io.pinnacl.academics.data.domain.AdmissionsConfig;
 import io.pinnacl.academics.school.data.SchoolType;
+import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record Secondary(UUID id, SchoolType type, String principalName, Integer numberOfStudents,
-                        String applicationNumberPrefix, Boolean deleted, Integer revision,
+                        @Valid AdmissionsConfig admissionsConfig, Boolean deleted, Integer revision,
                         LocalDateTime createdOn, LocalDateTime updatedOn, UUID createdBy,
                         UUID updatedBy, UUID ownerId, String hash)
                        implements Metadata {
@@ -16,10 +18,9 @@ public record Secondary(UUID id, SchoolType type, String principalName, Integer 
         return SchoolType.SECONDARY;
     }
 
-
     @Override
-    public Metadata withApplicationNumberPrefix(String applicationNumberPrefix) {
-        return new Secondary(id, type(), principalName, numberOfStudents, applicationNumberPrefix,
-                deleted, revision, createdOn, updatedOn, createdBy, updatedBy, ownerId, hash);
+    public Metadata withAdmissionsConfig(AdmissionsConfig admissionsConfig) {
+        return new Secondary(id, type(), principalName, numberOfStudents, admissionsConfig, deleted,
+                revision, createdOn, updatedOn, createdBy, updatedBy, ownerId, hash);
     }
 }

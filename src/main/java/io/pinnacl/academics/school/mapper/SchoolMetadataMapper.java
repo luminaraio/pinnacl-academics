@@ -37,7 +37,7 @@ public interface SchoolMetadataMapper extends
     @Mapping(target = "type", expression = "java( domain.type() )")
     @Mapping(target = "numberOfStudents", expression = "java( domain.numberOfStudents() )")
     @Mapping(target = "applicationNumberPrefix",
-            expression = "java( domain.applicationNumberPrefix() )")
+            expression = "java( domain.admissionsConfig().applicationNumberPrefix() )")
     SchoolMetadataEntity asEntity(Metadata domain);
 
     @Override

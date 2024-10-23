@@ -3,10 +3,12 @@ package io.pinnacl.academics.admissions;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import io.pinnacl.academics.admissions.data.domain.*;
 import io.pinnacl.academics.admissions.data.persistence.AdmissionEntity;
+import io.pinnacl.academics.admissions.repository.AdmissionRepository;
 import io.pinnacl.commons.auth.AuthUser;
 import io.pinnacl.commons.error.Problems;
 import io.pinnacl.commons.validation.*;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,19 +17,23 @@ public class AdmissionsValidator extends BaseDomainValidator<Admission>
                                  implements UniqueConstraintsValidator<Admission, AdmissionEntity> {
 
     private final PhoneNumberValidator phoneNumberValidator;
+    private final AdmissionRepository _repository;
 
     private AdmissionsValidator(List<Validator<Admission>> preValidators,
-                                List<Validator<Admission>> postValidator) {
+                                List<Validator<Admission>> postValidator,
+                                AdmissionRepository repository) {
         super(preValidators, postValidator);
         this.phoneNumberValidator = PhoneNumberValidator.create(PhoneNumberUtil.getInstance());
+        _repository               = repository;
     }
 
-    private AdmissionsValidator(List<Validator<Admission>> preValidators) {
-        this(preValidators, List.of());
+    private AdmissionsValidator(List<Validator<Admission>> preValidators,
+                                AdmissionRepository repository) {
+        this(preValidators, List.of(), repository);
     }
 
-    public static AdmissionsValidator create() {
-        return new AdmissionsValidator(List.of(StructuralValidator.create()));
+    public static AdmissionsValidator create(AdmissionRepository repository) {
+        return new AdmissionsValidator(List.of(StructuralValidator.create()), repository);
     }
 
     @Override
@@ -43,6 +49,27 @@ public class AdmissionsValidator extends BaseDomainValidator<Admission>
         };
 
         return metadataValidation.map(_ -> admission);
+    }
+
+    @Override
+    public Future<Admission> validationOnUpdate(AuthUser authUser, Admission admission) {
+        return super.validationOnUpdate(authUser, admission).flatMap(_ -> _repository
+                .retrieveOne(authUser, JsonObject.of("id", admission.id().toString()))
+                .flatMap(existing -> {
+                    if (existing.getStatus() != admission.status()) {
+                        // Validation error
+                        return Future.failedFuture(Problems.PAYLOAD_VALIDATION_ERROR
+                                .withProblemError("mismatchedStatus", "status cannot be changed")
+                                .toException());
+                    }
+                    return Future.succeededFuture(admission);
+                })
+                .recover(cause -> {
+                    // Map to a validation problem
+                    return Future.failedFuture(Problems.NOT_FOUND
+                            .withProblemError("missingAdmission", "admission does not exist")
+                            .toException());
+                }));
     }
 
     private Future<Metadata> doValidation(AuthUser authUser, GenericSchoolAdmission admission) {
