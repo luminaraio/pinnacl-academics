@@ -3,6 +3,7 @@ package io.pinnacl.academics;
 import io.pinnacl.academics.admissions.AdmissionsService;
 import io.pinnacl.academics.admissions.AdmissionsValidator;
 import io.pinnacl.academics.admissions.AdmissionsVerticle;
+import io.pinnacl.academics.admissions.data.config.AdmissionsConfig;
 import io.pinnacl.academics.admissions.mapper.AdmissionMapper;
 import io.pinnacl.academics.admissions.repository.AdmissionRepository;
 import io.pinnacl.academics.school.SchoolService;
@@ -10,10 +11,9 @@ import io.pinnacl.academics.school.SchoolValidator;
 import io.pinnacl.academics.school.SchoolVerticle;
 import io.pinnacl.academics.school.mapper.SchoolMapper;
 import io.pinnacl.academics.school.repository.SchoolRepository;
-import io.pinnacl.academics.school.repository.TermRepository;
-import io.pinnacl.academics.school.repository.TuitionFeeRepository;
 import io.pinnacl.commons.config.Config;
 import io.pinnacl.commons.config.VerticleConfig;
+import io.pinnacl.commons.data.mapper.JsonMapper;
 import io.pinnacl.commons.service.DbHealthService;
 import io.pinnacl.commons.verticle.AbstractMainVerticle;
 import io.pinnacl.commons.verticle.ServiceDetailsVerticle;
@@ -71,9 +71,10 @@ public final class MainVerticle extends AbstractMainVerticle {
 
         var admissionsConfig = verticleConfigs.get("admissions");
         var admissionRepository = AdmissionRepository.create(sessionFactory);
-        var admissionsService =
-                AdmissionsService.create(vertx, discovery(), AdmissionMapper.INSTANCE,
-                        admissionRepository, AdmissionsValidator.create(schoolsService));
+        var admissionsService = AdmissionsService.create(vertx, discovery(),
+                AdmissionMapper.INSTANCE, admissionRepository, AdmissionsValidator.create(),
+                schoolsService,
+                JsonMapper.fromJsonObject(admissionsConfig.config(), AdmissionsConfig.class));
 
         var serviceDetailsVerticle = ServiceDetailsVerticle.create(vertx, discovery(), config,
                 verticleConfigs.get("service"), "academics", dbHealthService);

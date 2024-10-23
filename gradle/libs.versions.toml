@@ -19,7 +19,7 @@ pluginGitSemverEnforcer = "0.0.3-SNAPSHOT"
 # Project dependencies
 
 # Dependencies: Pinnacl
-libraryPinnaclCommons = "24.7.0"
+libraryPinnaclCommons = "24.7.0-SNAPSHOT"
 
 
 # Dependencies: Vert.x

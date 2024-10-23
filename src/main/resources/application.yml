@@ -71,6 +71,10 @@ features:
         - name: retrieveAcademicAdmissions
         - name: retrieveAcademicAdmission
         - name: archiveAcademicAdmission
+      config:
+        applicationNumberPrefixLength: 4
+        applicationNumberPostfixLength: 8
+
 #      config:
 #        templates:
 #          applicationConfirmation:
