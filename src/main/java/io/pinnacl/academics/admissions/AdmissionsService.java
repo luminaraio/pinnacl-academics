@@ -1,10 +1,17 @@
 package io.pinnacl.academics.admissions;
 
+import io.pinnacl.academics.admissions.data.config.AdmissionsConfig;
 import io.pinnacl.academics.admissions.data.domain.Admission;
+import io.pinnacl.academics.admissions.data.domain.AdmissionQuestionAnswer;
 import io.pinnacl.academics.admissions.data.persistence.AdmissionEntity;
+import io.pinnacl.academics.school.SchoolService;
+import io.pinnacl.academics.school.data.domain.SchoolQuestion;
+import io.pinnacl.commons.Strings;
 import io.pinnacl.commons.auth.AuthUser;
 import io.pinnacl.commons.data.mapper.Mapper;
 import io.pinnacl.commons.error.Problems;
+import io.pinnacl.commons.features.forms.data.domain.Document;
+import io.pinnacl.commons.features.forms.data.domain.DocumentDefinition;
 import io.pinnacl.commons.repository.Repository;
 import io.pinnacl.commons.service.DefaultRecordService;
 import io.pinnacl.commons.service.MessageService;
@@ -12,33 +19,43 @@ import io.pinnacl.commons.validation.Validator;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
 import io.vertx.servicediscovery.ServiceDiscovery;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 import java.util.Objects;
-import java.util.UUID;
+import java.util.function.Predicate;
 
 public class AdmissionsService extends DefaultRecordService<Admission, AdmissionEntity>
                                implements MessageService {
 
     private final Vertx _vertx;
     private final ServiceDiscovery _discovery;
+    private final SchoolService _schoolService;
+    private final AdmissionsConfig _admissionsConfig;
 
 
     private AdmissionsService(Vertx vertx, ServiceDiscovery discovery,
                               Mapper<Admission, AdmissionEntity> mapper,
                               Repository<AdmissionEntity> repository,
-                              Validator<Admission> validator) {
+                              Validator<Admission> validator, SchoolService schoolService,
+                              AdmissionsConfig admissionsConfig) {
         super(Admission.class, mapper, repository, validator);
-        _vertx     = vertx;
-        _discovery = discovery;
+        _vertx            = vertx;
+        _discovery        = discovery;
+        _schoolService    = schoolService;
+        _admissionsConfig = admissionsConfig;
     }
 
     public static AdmissionsService create(Vertx vertx, ServiceDiscovery discovery,
                                            Mapper<Admission, AdmissionEntity> mapper,
                                            Repository<AdmissionEntity> repository,
-                                           Validator<Admission> validator) {
-        return new AdmissionsService(vertx, discovery, mapper, repository, validator);
+                                           Validator<Admission> validator,
+                                           SchoolService schoolService,
+                                           AdmissionsConfig admissionsConfig) {
+        return new AdmissionsService(vertx, discovery, mapper, repository, validator, schoolService,
+                admissionsConfig);
     }
 
     @Override
@@ -54,34 +71,7 @@ public class AdmissionsService extends DefaultRecordService<Admission, Admission
     @Override
     public Future<Admission> onCreate(AuthUser authUser, Admission domain) {
         logMethodEntry("AdmissionsService.onCreate");
-        var applicationNumber = generateApplicationNumber(domain);
-        var asDraft = domain.draft(applicationNumber);
-        return Future.succeededFuture(asDraft);
-
-
-        // return ((AdmissionRepository) repository())
-        // .retrieveByAnd(authUser, GUARDIAN_EMAIL, features.guardianEmail(), STUDENT_NAME,
-        // features.name())
-        // .flatMap(apps -> {
-        // if (!apps.isEmpty()) {
-        // return Future.failedFuture(Problems.UNIQUE_CONSTRAINT_VIOLATION_ERROR
-        // .withProblemError("[guardianEmail, name]",
-        // "The pair application.guardianEmail and application.name already exists")
-        // .toException());
-        // }
-        // return ((AdmissionRepository) repository())
-        // .countApplication(authUser, features.className())
-        // .flatMap(count -> super.create(authUser,
-        // features.withApplicationNumber(count)).flatMap(application -> {
-        // if (_schoolApplicationEmailConfig.notifications()
-        // .onCreateOrUpdate()
-        // .sendEmail()) {
-        // return deliverAmissionConfirmationMail(authUser,
-        // application).map(application);
-        // }
-        // return Future.succeededFuture(application);
-        // }));
-        // });
+        return doOnCreateAndOnUpdatePreProcessing(authUser, domain);
     }
 
     @Override
@@ -90,204 +80,115 @@ public class AdmissionsService extends DefaultRecordService<Admission, Admission
         return super.onPostCreate(authUser, persisted).onSuccess(this::onCreatePostProcessing);
     }
 
+    @Override
+    public Future<Admission> onUpdate(AuthUser authUser, Admission domain) {
+        return doOnCreateAndOnUpdatePreProcessing(authUser, domain);
+    }
+
     private String generateApplicationNumber(Admission admission) {
         logMethodEntry("AdmissionsService.generateApplicationNumber");
         if (Objects.nonNull(admission.transientSchool())) {
-            var prefix = admission.transientSchool().metadata().applicationNumberPrefix();
-            // TODO: We need to change the scheme. Need to check that the 'key' matches our agreed
-            // scheme
-            String key = UUID.randomUUID().toString().split("-")[4];
-            return "%s%s".formatted(prefix, key).toUpperCase(Locale.ROOT);
+            return processAdmissionApplicationNumber(admission);
         }
-        return null;
+        return defaultApplicationNumber();
     }
 
     private void onCreatePostProcessing(Admission admission) {
         logMethodEntry("AdmissionsService.onCreatePostProcessing");
     }
 
-    @Override
-    public Future<Admission> update(AuthUser authUser, Admission domain) {
-        return Future.failedFuture(Problems.NOT_IMPLEMENTED_ERROR.toException());
-        // return super.update(authUser, features).flatMap(application -> {
-        // if (application.status().equals(Status.ADMITTED)
-        // || application.status().equals(Status.REJECTED)) {
-        // if (_schoolApplicationEmailConfig.notifications().onCreateOrUpdate().sendEmail()) {
-        // return deliverAdmittedRejectionMail(authUser, application).map(application);
-        // }
-        // }
-        // return Future.succeededFuture(application);
-        // });
+    private Future<Admission> doOnCreateAndOnUpdatePreProcessing(AuthUser authUser,
+                                                                 Admission admission) {
+        return validator().validation(authUser, admission)
+                .flatMap(_admission -> doExtraValidation(authUser, _admission))
+                .map(_admission -> _admission.draft(generateApplicationNumber(admission)));
     }
 
-    // private Future<Void> deliverAmissionConfirmationMail(AuthUser authUser, Admission
-    // application) {
-    // logMethodEntry("AdmissionsService.deliverAmissionConfirmationMail");
-    //
-    // var supportEmail = StringUtils.replaceOnce(_schoolApplicationEmailConfig.templates()
-    // .applicationConfirmation()
-    // .template()
-    // .params()
-    // .supportEmail(), "(supportEmail)", "example.email@gmail.com");
-    //
-    // var params = new JsonObject().put("name", application.name())
-    // .put("gender", application.gender())
-    // .put("sickness", application.sickness())
-    // .put("className", application.className())
-    // .put("guardianEmail", application.guardianEmail())
-    // .put("guardianAddress", application.guardianAddress())
-    // .put("applicationNumber", application.applicationNumber())
-    // .put("applicationSubmissionDate",
-    // application.createdOn()
-    // .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-    // .put("institutionName", "ACME School")
-    // .put("admissionsEmail", supportEmail)
-    // .put("institutionWebsite", "www.some-random-school.com")
-    // .put("admissionsPhone", "+234 650 000 875 999")
-    // .put("supportEmail",
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationConfirmation()
-    // .template()
-    // .params()
-    // .supportEmail())
-    // .put("plazzaaLogoUrl",
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationConfirmation()
-    // .template()
-    // .params()
-    // .plazzaaLogoUrl())
-    // .put("signature",
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationConfirmation()
-    // .template()
-    // .params()
-    // .signature());
-    //
-    // var templatePath = StringUtils.replaceOnce(_schoolApplicationEmailConfig.templates()
-    // .applicationConfirmation()
-    // .template()
-    // .path(), "(messageType)", "email");
-    // var path = StringUtils.replaceOnce(templatePath, "$workingDir", _worksDir);
-    //
-    // return _templateEngine.render(params, path)
-    // .onFailure(error -> logError(
-    // "An issue occurred while rendering email delivery for school application confirmation",
-    // error))
-    // .map(Buffer::toString)
-    // .flatMap(messageText -> {
-    // var email = new Email(messageText,
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationConfirmation()
-    // .template()
-    // .params()
-    // .title(),
-    // List.of(new DeliveryRecipient(application.guardianEmail(),
-    // application.guardianName())));
-    // return JsonMapper.fromPojo(email)
-    // .flatMap(emailPayload -> request(authUser, OPERATION_EMAIL,
-    // CLOUD_EVENT_SOURCE, emailPayload))
-    // .flatMap(Events::singleResponse)
-    // .recover(cause -> {
-    // logError(
-    // "An issue occurred while attempting to deliver school application confirmation email",
-    // cause);
-    // return Future.succeededFuture();
-    // })
-    // .onSuccess(_ -> logDebug(
-    // "Successfully sent school application confirmation email"))
-    // .mapEmpty();
-    // });
-    // }
-    //
-    // private Future<Void> deliverAdmittedRejectionMail(AuthUser authUser, Admission application) {
-    // logMethodEntry("AdmissionsService.deliverAdmittedRejectionMail");
-    //
-    // var supportEmail = StringUtils.replaceOnce(_schoolApplicationEmailConfig.templates()
-    // .applicationStatus()
-    // .template()
-    // .params()
-    // .supportEmail(), "(supportEmail)", "example.email@gmail.com");
-    //
-    // boolean isAccepted = application.status().equals(Status.ADMITTED);
-    // var status = isAccepted ? "Accepted" : "Rejected";
-    //
-    // var params = new JsonObject().put("name", application.name())
-    // .put("status", status)
-    // .put("isAccepted", isAccepted)
-    // .put("className", application.className())
-    // .put("guardianEmail", application.guardianEmail())
-    // .put("acceptanceDeadline",
-    // application.createdOn()
-    // .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-    // .put("institutionName", "ACME School")
-    // .put("admissionsEmail", supportEmail)
-    // .put("institutionWebsite", "www.some-random-school.com")
-    // .put("admissionsPhone", "+234 650 000 875 999")
-    // .put("supportEmail",
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationStatus()
-    // .template()
-    // .params()
-    // .supportEmail())
-    // .put("plazzaaLogoUrl",
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationStatus()
-    // .template()
-    // .params()
-    // .plazzaaLogoUrl())
-    // .put("signature",
-    // _schoolApplicationEmailConfig.templates()
-    // .applicationStatus()
-    // .template()
-    // .params()
-    // .signature());
-    //
-    // var templatePath = StringUtils.replaceOnce(
-    // _schoolApplicationEmailConfig.templates().applicationStatus().template().path(),
-    // "(messageType)", "email");
-    // var path = StringUtils.replaceOnce(templatePath, "$workingDir", _worksDir);
-    //
-    //
-    // return _templateEngine.render(params, path)
-    // .onFailure(error -> logError(
-    // "An issue occurred while rendering email delivery for school application confirmation",
-    // error))
-    // .map(Buffer::toString)
-    // .flatMap(messageText -> {
-    // var email = new Email(messageText,
-    // StringUtils.replaceOnce(_schoolApplicationEmailConfig.templates()
-    // .applicationStatus()
-    // .template()
-    // .params()
-    // .title(), "(status)", status),
-    // List.of(new DeliveryRecipient(application.guardianEmail(),
-    // application.guardianName())));
-    // return JsonMapper.fromPojo(email)
-    // .flatMap(emailPayload -> request(authUser, OPERATION_EMAIL,
-    // CLOUD_EVENT_SOURCE, emailPayload))
-    // .flatMap(Events::singleResponse)
-    // .recover(cause -> {
-    // logError(
-    // "An issue occurred while attempting to deliver school application confirmation email",
-    // cause);
-    // return Future.succeededFuture();
-    // })
-    // .onSuccess(_ -> logDebug(
-    // "Successfully sent school application confirmation email"))
-    // .mapEmpty();
-    // });
-    // }
+    private Future<Admission> doExtraValidation(AuthUser authUser, Admission admission) {
+        if (Objects.nonNull(admission.school())) {
+            var schoolById = JsonObject.of("id", admission.school().id().toString());
+            return _schoolService.retrieve(authUser, schoolById).flatMap(schools -> {
+                if (schools.isEmpty()) {
+                    return Future.failedFuture(Problems.PAYLOAD_VALIDATION_ERROR
+                            .withProblemError("school", "not a valid school")
+                            .toException());
+                }
+                return Future.succeededFuture(admission.withTransientSchool(schools.getFirst()));
+            })
+                    .flatMap(withSchool -> Future
+                            .all(checkExtraQuestions(withSchool), checkDocuments(withSchool))
+                            .map(_ -> withSchool));
+        }
+        return Future.succeededFuture(admission);
+    }
 
-    // public Future<ApplicationAnalytics> fetchApplicationsAnalytics(AuthUser authUser) {
-    // return repository().count(authUser, new JsonObject().put("deleted", false))
-    // .flatMap(apps -> countApplicationByStatus(authUser, Status.REJECTED)
-    // .flatMap(rej -> countApplicationByStatus(authUser, Status.ADMITTED).flatMap(
-    // adm -> countApplicationByStatus(authUser, Status.INCOMPLETE).map(
-    // inc -> new ApplicationAnalytics(apps, rej, adm, inc)))));
-    // }
-    //
-    // public Future<Long> countApplicationByStatus(AuthUser authUser, Status status) {
-    // return repository().count(authUser,
-    // new JsonObject().put("status", status.value).put("deleted", false));
-    // }
+    private Future<Void> checkExtraQuestions(Admission withSchool) {
+        var schoolQuestions = withSchool.transientSchool().extraAdmissionQuestions();
+        var requiredExtraQuestions =
+                schoolQuestions.stream().filter(SchoolQuestion::required).toList();
+
+        Predicate<AdmissionQuestionAnswer> isAnswered =
+                (AdmissionQuestionAnswer qa) -> requiredExtraQuestions.stream()
+                        .anyMatch(x -> x.type() == qa.type()
+                                && StringUtils.equals(x.name(), qa.name()));
+
+
+        var allMatch = withSchool.questionAnswers().stream().allMatch(isAnswered::test);
+
+        if (Boolean.FALSE.equals(allMatch)) {
+            return Future
+                    .failedFuture(Problems.PAYLOAD_VALIDATION_ERROR
+                            .withProblemError("missingQuestionAnswers",
+                                    "not all required extra-questions have been answered")
+                            .toException());
+        }
+
+        return Future.succeededFuture();
+    }
+
+    private Future<Void> checkDocuments(Admission withSchool) {
+        var supportingDocuments = withSchool.transientSchool().supportingDocuments();
+        var requiredSupportingDocuments =
+                supportingDocuments.stream().filter(DocumentDefinition::required).toList();
+
+        Predicate<DocumentDefinition> isAttached =
+                (DocumentDefinition x) -> requiredSupportingDocuments.stream()
+                        .anyMatch(y -> StringUtils.equals(x.name(), y.name()));
+
+        var allMatch = withSchool.documents()
+                .stream()
+                .map(Document::definition)
+                .allMatch(isAttached::test);
+
+        if (Boolean.FALSE.equals(allMatch)) {
+            return Future.failedFuture(Problems.PAYLOAD_VALIDATION_ERROR
+                    .withProblemError("missingDocuments",
+                            "not all required supporting documents have been uploaded")
+                    .toException());
+        }
+
+        return Future.succeededFuture();
+    }
+
+    private String processAdmissionApplicationNumber(Admission admission) {
+        var prefix = admission.transientSchool().metadata().applicationNumberPrefix();
+        if (Objects.isNull(prefix) || prefix.isBlank()
+                || prefix.length() != _admissionsConfig.applicationNumberPrefixLength()
+                || !StringUtils.isAlpha(prefix)) {
+            return defaultApplicationNumber();
+        }
+        return "%s-%s"
+                .formatted(prefix,
+                        Strings.generateUniqueCharString(
+                                _admissionsConfig.applicationNumberPostfixLength()))
+                .toUpperCase(Locale.ROOT);
+    }
+
+    private String defaultApplicationNumber() {
+        return "%s-%s".formatted(
+                Strings.generateUniqueCharString(_admissionsConfig.applicationNumberPrefixLength()),
+                Strings.generateUniqueCharString(
+                        _admissionsConfig.applicationNumberPostfixLength()))
+                .toUpperCase(Locale.ROOT);
+    }
 }
