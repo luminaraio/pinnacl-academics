@@ -3,8 +3,9 @@ package io.pinnacl.academics.admissions;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import io.pinnacl.academics.admissions.data.domain.*;
 import io.pinnacl.academics.admissions.data.persistence.AdmissionEntity;
-import io.pinnacl.academics.school.SchoolService;
 import io.pinnacl.academics.school.data.domain.SchoolQuestion;
+import io.pinnacl.academics.school.mapper.SchoolMapper;
+import io.pinnacl.academics.school.repository.SchoolRepository;
 import io.pinnacl.commons.auth.AuthUser;
 import io.pinnacl.commons.error.Problems;
 import io.pinnacl.commons.features.forms.data.domain.Document;
@@ -22,23 +23,23 @@ public class AdmissionsValidator extends BaseDomainValidator<Admission>
         implements UniqueConstraintsValidator<Admission, AdmissionEntity> {
 
     private final PhoneNumberValidator phoneNumberValidator;
-    private final SchoolService _schoolService;
+    private final SchoolRepository _schoolRepository;
 
     private AdmissionsValidator(List<Validator<Admission>> preValidators,
                                 List<Validator<Admission>> postValidator,
-                                SchoolService schoolService) {
+                                SchoolRepository schoolRepository) {
         super(preValidators, postValidator);
         this.phoneNumberValidator = PhoneNumberValidator.create(PhoneNumberUtil.getInstance());
-        _schoolService            = schoolService;
+        _schoolRepository = schoolRepository;
     }
 
     private AdmissionsValidator(List<Validator<Admission>> preValidators,
-                                SchoolService schoolService) {
-        this(preValidators, List.of(), schoolService);
+                                SchoolRepository schoolRepository) {
+        this(preValidators, List.of(), schoolRepository);
     }
 
-    public static AdmissionsValidator create(SchoolService schoolService) {
-        return new AdmissionsValidator(List.of(StructuralValidator.create()), schoolService);
+    public static AdmissionsValidator create(SchoolRepository schoolRepository) {
+        return new AdmissionsValidator(List.of(StructuralValidator.create()), schoolRepository);
     }
 
     @Override
@@ -93,7 +94,9 @@ public class AdmissionsValidator extends BaseDomainValidator<Admission>
     private Future<Admission> doExtraValidation(AuthUser authUser, Admission admission) {
         if (Objects.nonNull(admission.school())) {
             var schoolById = JsonObject.of("id", admission.school().id().toString());
-            return _schoolService.retrieve(authUser, schoolById).flatMap(schools -> {
+            return _schoolRepository.retrieve(authUser, schoolById)
+                    .flatMap(SchoolMapper.INSTANCE::toDomainObjects)
+                    .flatMap(schools -> {
                         if (schools.isEmpty()) {
                             return Future.failedFuture(Problems.PAYLOAD_VALIDATION_ERROR
                                     .withProblemError("school", "not a valid school")

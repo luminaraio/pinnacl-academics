@@ -3,9 +3,9 @@ package io.pinnacl.academics;
 import io.pinnacl.academics.admissions.AdmissionsService;
 import io.pinnacl.academics.admissions.AdmissionsValidator;
 import io.pinnacl.academics.admissions.AdmissionsVerticle;
-import io.pinnacl.academics.data.domain.AdmissionsConfig;
 import io.pinnacl.academics.admissions.mapper.AdmissionMapper;
 import io.pinnacl.academics.admissions.repository.AdmissionRepository;
+import io.pinnacl.academics.data.domain.AdmissionsConfig;
 import io.pinnacl.academics.school.SchoolService;
 import io.pinnacl.academics.school.SchoolValidator;
 import io.pinnacl.academics.school.SchoolVerticle;
@@ -14,7 +14,6 @@ import io.pinnacl.academics.school.repository.SchoolRepository;
 import io.pinnacl.commons.Jsons;
 import io.pinnacl.commons.config.Config;
 import io.pinnacl.commons.config.VerticleConfig;
-import io.pinnacl.commons.data.mapper.JsonMapper;
 import io.pinnacl.commons.service.DbHealthService;
 import io.pinnacl.commons.verticle.AbstractMainVerticle;
 import io.pinnacl.commons.verticle.ServiceDetailsVerticle;
@@ -69,14 +68,15 @@ public final class MainVerticle extends AbstractMainVerticle {
                 .map(admissionConfig -> admissionConfig.mapTo(AdmissionsConfig.class))
                 .orElseGet(AdmissionsConfig::pinnaclDefaults);
 
+        var schoolRepository = SchoolRepository.create(sessionFactory);
+
         var admissionsConfig = verticleConfigs.get("admissions");
         var admissionRepository = AdmissionRepository.create(sessionFactory);
         var admissionsService = AdmissionsService.create(vertx, discovery(),
                 AdmissionMapper.INSTANCE, admissionRepository,
-                AdmissionsValidator.create(admissionRepository), defaultAdmissionConfig);
+                AdmissionsValidator.create(schoolRepository), defaultAdmissionConfig);
 
         var schoolsConfig = verticleConfigs.get("schools");
-        var schoolRepository = SchoolRepository.create(sessionFactory);
         var schoolsService = SchoolService.create(SchoolMapper.INSTANCE, schoolRepository,
                 SchoolValidator.create(schoolRepository), defaultAdmissionConfig, admissionsService);
 
