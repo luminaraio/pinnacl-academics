@@ -77,7 +77,7 @@ public class SchoolEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "address_id"))
     private PostalAddressEntity address;
 
-    @OneToOne(targetEntity = SocialLinkEntity.class, cascade = {
+    @OneToMany(targetEntity = SocialLinkEntity.class, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     })
     @JoinTable(name = "_link_schools_and_social_links",
